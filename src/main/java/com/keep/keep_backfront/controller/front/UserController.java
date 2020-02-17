@@ -1,4 +1,4 @@
-package com.keep.keep_backfront.controller;
+package com.keep.keep_backfront.controller.front;
 
 import com.keep.keep_backfront.dao.UserDao;
 import com.keep.keep_backfront.entity.User;
