@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -19,8 +18,7 @@ public class HopeService {
     /**
      * 在树洞中发布一条心愿
      */
-    ResponseEntity publishHope(){
-        Hope hope = new Hope();
+    public ResponseEntity publishHope(Hope hope){
 
         try {
             int effectedNum = hopeDao.insertHope(hope);

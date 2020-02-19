@@ -12,13 +12,13 @@ import java.util.List;
 public interface HopeDao {
 
     @Insert("insert into hope(word_content,images,voice,create_user_id,create_time,is_anonymous,is_see_self)"+
-    "values(#{word_content}," +
+    "values(#{wordContent}," +
             "#{images, typeHandler=com.keep.keep_backfront.handler.ArrayJsonHandler}," +
             "#{voice}," +
-            "#{create_user_id}," +
-            "#{create_time}," +
-            "#{is_anonymous}," +
-            "#{is_see_self})")
+            "#{createUserId}," +
+            "#{createTime}," +
+            "#{isAnonymous}," +
+            "#{isSeeSelf})")
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
     Integer insertHope(Hope hope);
 
