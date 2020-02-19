@@ -1,10 +1,14 @@
 package com.keep.keep_backfront.dao;
 
+import com.github.pagehelper.Page;
 import com.keep.keep_backfront.entity.Custom;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -17,9 +21,19 @@ public interface CustomDao {
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
     Integer insertCustom(Custom custom);
 
-    @Select("select * from custom")
-    List<Custom> allCustomList();
+    @SelectProvider(type = CustomDaoProvider.class, method = "customList")
+    List<Custom> customList(Integer userId, String title);
 
-    @Select("select * from custom where create_user_id=#{userId}")
-    List<Custom> customByUserIdList(Integer userId);
+    // 根据条件构建动态sql
+    class CustomDaoProvider {
+        public String customList(Integer userId, String title) {
+            return new SQL(){{
+                SELECT("*");
+                FROM("custom");
+                if (userId != null) WHERE("create_user_id=#{userId}");
+                if (!StringUtils.isEmpty(title)) WHERE("title LIKE '%" + title + "%'");
+            }}.toString();
+        }
+    }
+
 }
