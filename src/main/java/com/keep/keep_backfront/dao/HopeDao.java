@@ -11,6 +11,7 @@ import java.util.List;
 @Component
 public interface HopeDao {
 
+    //插入单个树洞心愿
     @Insert("insert into hope(word_content,images,voice,create_user_id,create_time,is_anonymous,is_see_self)"+
     "values(#{wordContent}," +
             "#{images, typeHandler=com.keep.keep_backfront.handler.ArrayJsonHandler}," +
@@ -22,13 +23,16 @@ public interface HopeDao {
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
     Integer insertHope(Hope hope);
 
+    //查询所有树洞心愿
     @Select("select * from hope")
     List<Hope> allHopesList();
 
+    //根据userId返回该用户所有树洞心愿
     @Select("select * from hope " +
             "where create_user_id=#{userId}")
-    List<Hope>singleHopeList(Integer hopeId);
+    List<Hope>HopeListByUser(Integer userId);
 
+    //随机返回一条树洞心愿
     @Select("select * from hope order by rand() limit 1")
     Hope oneRandHope();
 }
