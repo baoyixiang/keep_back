@@ -18,6 +18,14 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .groupName("Bao");
     }
+
+    @Bean
+    public Docket docketTintin(){
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("Tintin");
+    }
+
 }

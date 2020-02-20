@@ -1,0 +1,50 @@
+package com.keep.keep_backfront.controller.front;
+
+import com.keep.keep_backfront.VO.inVO.hope.AllHopeListInVO;
+import com.keep.keep_backfront.VO.inVO.hope.HopeListInVO;
+import com.keep.keep_backfront.VO.inVO.hope.PublishHopeInVO;
+import com.keep.keep_backfront.entity.Hope;
+import com.keep.keep_backfront.service.HopeService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Api("小程序端树洞相关api")
+@RestController
+@RequestMapping("api/user/hope")
+public class HopeController {
+
+
+    @Autowired
+    private HopeService hopeService;
+
+    @ApiOperation("发布一条树洞心愿")
+    @PostMapping("newHope")
+    public ResponseEntity publishHope(@RequestBody PublishHopeInVO request){
+        return hopeService.publishHope(request);
+    }
+
+    @ApiOperation("随机获取一条树洞心愿")
+    @GetMapping("randomHope")
+    public Hope getHopeRandom(){
+        return hopeService.getHopeRandom();
+    }
+
+    @ApiOperation("获取树洞中的所有树洞心愿列表")
+    @GetMapping("allHopes")
+    public List<Hope> getAllHopesList(@RequestBody AllHopeListInVO request){
+        return hopeService.getAllHopesList(request);
+    }
+
+    @ApiOperation("获取指定用户的树洞心愿列表")
+    @PostMapping("hopeList")
+    public List<Hope> getHopesListByUser(@RequestBody HopeListInVO request){
+        return hopeService.getHopeListByUser(request);
+    }
+
+}
+

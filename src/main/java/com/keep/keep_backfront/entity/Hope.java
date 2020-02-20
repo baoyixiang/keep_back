@@ -1,6 +1,8 @@
 package com.keep.keep_backfront.entity;
 
 
+import com.alibaba.fastjson.JSONArray;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -8,7 +10,7 @@ public class Hope implements Serializable {
 
   private Integer id;
   private String wordContent;
-  private String images;
+  private JSONArray images = new JSONArray();
   private String voice;
   private Integer createUserId;
   private Date createTime;
@@ -31,11 +33,11 @@ public class Hope implements Serializable {
     this.wordContent = wordContent;
   }
 
-  public String getImages() {
+  public JSONArray getImages() {
     return images;
   }
 
-  public void setImages(String images) {
+  public void setImages(JSONArray images) {
     this.images = images;
   }
 
