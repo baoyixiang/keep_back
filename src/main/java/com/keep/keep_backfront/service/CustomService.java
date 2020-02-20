@@ -1,5 +1,9 @@
 package com.keep.keep_backfront.service;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.keep.keep_backfront.VO.inVO.custom.CustomListInVO;
 import com.keep.keep_backfront.dao.CustomDao;
 import com.keep.keep_backfront.entity.Custom;
 import com.keep.keep_backfront.handler.exception.ParameterErrorException;
@@ -46,16 +50,16 @@ public class CustomService {
     }
 
     /**
-     * 获取一个用户创建的习惯
+     * 获取习惯列表
      */
-    public List<Custom> getCustomByUser(Integer userId) {
-        List<Custom> list;
+    public PageInfo<Custom> getCustomList(CustomListInVO inVO) {
+        PageHelper.startPage(inVO.getPageNo(), inVO.getPageSize());
         try {
-            list = customDao.customByUserIdList(userId);
+            List<Custom> list = customDao.customList(inVO.getUserId(), inVO.getTitle());
+            return new PageInfo<>(list);
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new RuntimeException("信息获取失败");
         }
-        return list;
     }
 }
