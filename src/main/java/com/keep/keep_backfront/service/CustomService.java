@@ -4,9 +4,15 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.keep.keep_backfront.VO.inVO.custom.CustomListInVO;
+import com.keep.keep_backfront.VO.inVO.custom.JoinCustomInVO;
+import com.keep.keep_backfront.VO.inVO.custom.UserCustomInVO;
+import com.keep.keep_backfront.VO.outVO.custom.CustomDetailOutVO;
+import com.keep.keep_backfront.dao.CheckInDao;
 import com.keep.keep_backfront.dao.CustomDao;
 import com.keep.keep_backfront.entity.Custom;
+import com.keep.keep_backfront.entity.JoinCustom;
 import com.keep.keep_backfront.handler.exception.ParameterErrorException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +31,12 @@ public class CustomService {
     @Autowired
     private CustomDao customDao;
 
-    // 插入一条习惯信息
+    @Autowired
+    private CheckInDao checkInDao;
+
+    /**
+     * 插入一条习惯信息
+     */
     public ResponseEntity insertCustom(String title, Integer userId) {
         if (title == null) {
             throw new ParameterErrorException("习惯标题不能为空");
@@ -61,5 +72,48 @@ public class CustomService {
             ex.printStackTrace();
             throw new RuntimeException("信息获取失败");
         }
+    }
+
+    /**
+     * 用户加入一个习惯
+     */
+    public ResponseEntity joinCustom(JoinCustomInVO inVO) {
+        JoinCustom joinCustom = new JoinCustom();
+        joinCustom.setUserId(inVO.getUserId());
+        joinCustom.setCustomId(inVO.getCustomId());
+        joinCustom.setJoinTime(new Date());
+        joinCustom.setPublic(inVO.getIsPublic());
+        joinCustom.setTargetDays(inVO.getTargetDay());
+        joinCustom.setCompleted(false);
+        joinCustom.setBeansCount(inVO.getBeansCount());
+        joinCustom.setCheckDaysCount(0);
+
+        try {
+            customDao.joinCustom(joinCustom);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    public ResponseEntity updateCustom(JoinCustomInVO inVO) {
+        JoinCustom joinCustom = customDao.findJoinCustomById(inVO.getId());
+        BeanUtils.copyProperties(inVO, joinCustom);
+        try {
+            customDao.updateJoinCustom(joinCustom);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // 获取习惯的详细信息，主要需要包括所有的打卡信息
+    public CustomDetailOutVO getCustomDetails(UserCustomInVO inVO) {
+        CustomDetailOutVO outVO = new CustomDetailOutVO();
+        outVO.setJoinCustom(customDao.findJoinCustomByUserAndCustom(inVO.getUserId(), inVO.getCustomId()));
+        outVO.setCheckInList(checkInDao.findCheckinByUserAndCustom(inVO.getUserId(), inVO.getCustomId()));
+        return outVO;
     }
 }
