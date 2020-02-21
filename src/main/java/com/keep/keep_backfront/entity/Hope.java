@@ -2,6 +2,7 @@ package com.keep.keep_backfront.entity;
 
 
 import com.alibaba.fastjson.JSONArray;
+import io.swagger.models.auth.In;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,6 +17,8 @@ public class Hope implements Serializable {
   private Date createTime;
   private Boolean isAnonymous;
   private Boolean isSeeSelf;
+  private Integer likeCount;
+  private Integer CommentCount;
 
   public Integer getId() {
     return id;
@@ -79,5 +82,21 @@ public class Hope implements Serializable {
 
   public void setSeeSelf(Boolean seeSelf) {
     isSeeSelf = seeSelf;
+  }
+
+  public Integer getLikeCount() {
+    return likeCount;
+  }
+
+  public void setLikeCount(Integer likeCount) {
+    this.likeCount = likeCount;
+  }
+
+  public Integer getCommentCount() {
+    return CommentCount;
+  }
+
+  public void setCommentCount(Integer commentCount) {
+    CommentCount = commentCount;
   }
 }

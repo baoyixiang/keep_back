@@ -75,6 +75,8 @@ CREATE TABLE `hope`  (
   `create_time` timestamp(0) NOT NULL COMMENT '创建时间',
   `is_anonymous` tinyint(1) NOT NULL COMMENT '是否匿名，如果匿名，那么发布的时候不展示是谁发布的',
   `is_see_self` tinyint(1) NOT NULL COMMENT '是否仅自己可见，如果仅自己可见，那么只能在我的页面进行查看',
+  `likeCount` int(11) NOT NULL comment '心愿点赞数',
+  `CommentCount` int(11) NOT NULL comment '心愿评论数',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
@@ -155,11 +157,13 @@ CREATE TABLE `user_like_check_in`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `user_like_hope`;
 CREATE TABLE `user_like_hope`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+#  `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `hope_id` int(11) NOT NULL,
+  `like_state` tinyint not null comment '点赞的状态',
   `like_time` timestamp(0) NOT NULL COMMENT '点赞的时间',
-  PRIMARY KEY (`id`) USING BTREE
+  #  PRIMARY KEY (`id`) USING BTREE
+    primary key (user_id,hope_id)   COMMENT '用户id和心愿id两列联合作为主键'
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

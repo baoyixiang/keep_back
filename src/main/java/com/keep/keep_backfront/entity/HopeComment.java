@@ -4,7 +4,7 @@ package com.keep.keep_backfront.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-public class HopeComments implements Serializable {
+public class HopeComment implements Serializable {
 
   private Integer id;
   private Integer userId;

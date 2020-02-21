@@ -1,9 +1,8 @@
 package com.keep.keep_backfront.controller.front;
 
-import com.keep.keep_backfront.VO.inVO.hope.AllHopeListInVO;
-import com.keep.keep_backfront.VO.inVO.hope.HopeListInVO;
-import com.keep.keep_backfront.VO.inVO.hope.PublishHopeInVO;
+import com.keep.keep_backfront.VO.inVO.hope.*;
 import com.keep.keep_backfront.entity.Hope;
+import com.keep.keep_backfront.entity.HopeDetail;
 import com.keep.keep_backfront.service.HopeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +24,7 @@ public class HopeController {
     @ApiOperation("发布一条树洞心愿")
     @PostMapping("newHope")
     public ResponseEntity publishHope(@RequestBody PublishHopeInVO request){
+        request.checkParam();
         return hopeService.publishHope(request);
     }
 
@@ -44,6 +44,26 @@ public class HopeController {
     @PostMapping("hopeList")
     public List<Hope> getHopesListByUser(@RequestBody HopeListInVO request){
         return hopeService.getHopeListByUser(request);
+    }
+
+    @ApiOperation("发布一条树洞心愿评论")
+    @PostMapping("newHopeComment")
+    public ResponseEntity PublishHopeComment(@RequestBody PublishHopeCommentsInVO request){
+        request.checkParam();
+        return hopeService.publishHopeComment(request);
+    }
+
+    @ApiOperation("用户点赞一条树洞心愿")
+    @PostMapping("likeHope")
+    public ResponseEntity AddLikeHope(@RequestBody AddLikeHopeVO request){
+        request.checkParam();
+        return hopeService.likeHope(request);
+    }
+
+    @ApiOperation("获取心愿详情hope_detail")
+    @PostMapping("hopeDetail")
+    public HopeDetail getHopeDetail(@RequestBody Integer hopeId){
+        return hopeService.hopeDetail(hopeId);
     }
 
 }
