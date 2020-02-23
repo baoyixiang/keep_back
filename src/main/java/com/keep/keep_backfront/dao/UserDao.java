@@ -21,4 +21,8 @@ public interface UserDao {
             @Result(column = "roles", property = "roles", typeHandler = ArrayJsonHandler.class)
     })
     List<User> listUser();
+
+    //获取用户推荐列表（待完成）
+    @Select("select * from user order by id")
+    List<User> getUserByPopularity();
 }

@@ -1,10 +1,7 @@
 package com.keep.keep_backfront.controller.front;
 
 import com.github.pagehelper.PageInfo;
-import com.keep.keep_backfront.VO.inVO.custom.AddCustomInVO;
-import com.keep.keep_backfront.VO.inVO.custom.CustomListInVO;
-import com.keep.keep_backfront.VO.inVO.custom.JoinCustomInVO;
-import com.keep.keep_backfront.VO.inVO.custom.UserCustomInVO;
+import com.keep.keep_backfront.VO.inVO.custom.*;
 import com.keep.keep_backfront.VO.outVO.custom.CustomDetailOutVO;
 import com.keep.keep_backfront.entity.Custom;
 import com.keep.keep_backfront.service.CustomService;
@@ -13,6 +10,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author bao
@@ -55,4 +54,11 @@ public class CustomController {
     public CustomDetailOutVO getCustomDetails(@RequestBody UserCustomInVO request) {
         return customService.getCustomDetails(request);
     }
+
+    @ApiOperation("获取推荐习惯列表")
+    @PostMapping("recommend_custom_list")
+    public List<List<Custom>> getRecommendCustom(@RequestBody recommendListInVo request) {
+        return customService.getRecommendCustomList(request);
+    }
+
 }

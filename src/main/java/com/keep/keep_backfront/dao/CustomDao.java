@@ -39,6 +39,10 @@ public interface CustomDao {
     @Select("select * from join_custom where user_id=#{userId} and custom_id=#{customId}")
     JoinCustom findJoinCustomByUserAndCustom(Integer userId, Integer customId);
 
+    @Select("select * from custom where is_default = 1 and json_contains(tags,'[\"${tagId}\"]')")
+    List<Custom> findRecommendCustomByTag(String tagId);
+
+
     // 根据条件构建动态sql
     class CustomDaoProvider {
         public String customList(Integer userId, String title) {
