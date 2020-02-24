@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @Api("后台心愿api")
 @RestController
 @RequestMapping("backapi/hope")
