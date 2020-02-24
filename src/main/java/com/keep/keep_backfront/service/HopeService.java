@@ -27,12 +27,13 @@ public class HopeService {
     public ResponseEntity publishHope(PublishHopeInVO request){
 
         Hope hope = new Hope();
-        hope.setId(request.getId());
         hope.setWordContent(request.getWordContent());
         hope.setCreateUserId(request.getCreateUserId());
         hope.setCreateTime(request.getCreateTime());
         hope.setAnonymous(request.getIsAnonymous());
         hope.setSeeSelf(request.getIsSeeSelf());
+        hope.setLikeCount(0);
+        hope.setCommentCount(0);
 
         try {
             int effectedNum = hopeDao.insertHope(hope);

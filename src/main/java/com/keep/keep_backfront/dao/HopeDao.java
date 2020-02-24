@@ -5,10 +5,7 @@ import com.keep.keep_backfront.entity.Hope;
 import com.keep.keep_backfront.entity.HopeComment;
 import com.keep.keep_backfront.entity.HopeDetail;
 import com.keep.keep_backfront.entity.UserLikeHope;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,14 +15,16 @@ import java.util.List;
 public interface HopeDao {
 
     //插入单个树洞心愿
-    @Insert("insert into hope(word_content,images,voice,create_user_id,create_time,is_anonymous,is_see_self)"+
+    @Insert("insert into hope(word_content,images,voice,create_user_id,create_time,is_anonymous,is_see_self,likeCount,CommentCount)"+
     "values(#{wordContent}," +
             "#{images, typeHandler=com.keep.keep_backfront.handler.ArrayJsonHandler}," +
             "#{voice}," +
             "#{createUserId}," +
             "#{createTime}," +
             "#{isAnonymous}," +
-            "#{isSeeSelf})")
+            "#{isSeeSelf}," +
+            "#{likeCount}," +
+            "#{CommentCount})")
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
     Integer insertHope(Hope hope);
 
@@ -78,5 +77,17 @@ public interface HopeDao {
 //    //查询心愿的评论数
 //    @Select("select CommentCount distinct from hope_details_view where HopeId=#{hopeId}")
 //    Integer hopeCommentCount(Integer hopeId);
+
+    /**
+     * -------------------------------------------------------------------------------
+     */
+
+    //删除心愿
+    @Delete("delete from hope where id=#{hopeId}")
+    void deleteHope(Integer hopeId);
+
+    //根据心愿id删除心愿评论
+    @Delete("delete from hope_comments where hope_id=#{hopeId}")
+    void deleteHopeCommentByhopeId(Integer hopeId);
 
 }

@@ -35,7 +35,7 @@ public class HopeController {
     }
 
     @ApiOperation("获取树洞中的所有树洞心愿列表")
-    @GetMapping("allHopes")
+    @PostMapping("allHopes")
     public List<Hope> getAllHopesList(@RequestBody AllHopeListInVO request){
         return hopeService.getAllHopesList(request);
     }

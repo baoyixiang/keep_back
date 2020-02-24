@@ -9,7 +9,6 @@ import java.util.Date;
 
 @Data
 public class PublishHopeInVO {
-    private Integer id;
     private String wordContent;
     private JSONArray images = new JSONArray();
     private String voice;

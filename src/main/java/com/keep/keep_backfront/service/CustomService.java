@@ -6,7 +6,6 @@ import com.github.pagehelper.PageInfo;
 import com.keep.keep_backfront.VO.inVO.custom.CustomListInVO;
 import com.keep.keep_backfront.VO.inVO.custom.JoinCustomInVO;
 import com.keep.keep_backfront.VO.inVO.custom.UserCustomInVO;
-import com.keep.keep_backfront.VO.inVO.custom.recommendListInVo;
 import com.keep.keep_backfront.VO.outVO.custom.CustomDetailOutVO;
 import com.keep.keep_backfront.dao.CheckInDao;
 import com.keep.keep_backfront.dao.CustomDao;
@@ -20,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -117,16 +115,5 @@ public class CustomService {
         outVO.setJoinCustom(customDao.findJoinCustomByUserAndCustom(inVO.getUserId(), inVO.getCustomId()));
         outVO.setCheckInList(checkInDao.findCheckinByUserAndCustom(inVO.getUserId(), inVO.getCustomId()));
         return outVO;
-    }
-
-    //获取推荐习惯类型的列表
-    public List<List<Custom>> getRecommendCustomList(recommendListInVo request) {
-        List<List<Custom>> recommendCustomList = new ArrayList<>();
-        List<String> tagsList = request.getTagsList();
-        for(String str : tagsList) {
-            System.out.println("tag:" + str);
-            recommendCustomList.add(customDao.findRecommendCustomByTag(str));
-        }
-        return recommendCustomList;
     }
 }
