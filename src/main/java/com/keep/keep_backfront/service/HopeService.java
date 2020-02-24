@@ -2,6 +2,7 @@ package com.keep.keep_backfront.service;
 
 import com.github.pagehelper.PageHelper;
 import com.keep.keep_backfront.VO.inVO.hope.*;
+import com.keep.keep_backfront.VO.outVO.hope.HopeListOutVO;
 import com.keep.keep_backfront.dao.HopeDao;
 import com.keep.keep_backfront.entity.Hope;
 import com.keep.keep_backfront.entity.HopeComment;
@@ -52,9 +53,9 @@ public class HopeService {
     /**
      *  获取树洞中的树洞心愿列表
      */
-    public List<Hope> getAllHopesList(AllHopeListInVO allHopeListInVO){
+    public List<HopeListOutVO> getAllHopesList(AllHopeListInVO allHopeListInVO){
         PageHelper.startPage(allHopeListInVO.getPageNo(), allHopeListInVO.getPageSize());
-        List<Hope> hopeList ;
+        List<HopeListOutVO> hopeList ;
         try{
             hopeList = hopeDao.allHopesList();
         }catch (Exception e){

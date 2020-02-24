@@ -1,6 +1,7 @@
 package com.keep.keep_backfront.controller.front;
 
 import com.keep.keep_backfront.VO.inVO.hope.*;
+import com.keep.keep_backfront.VO.outVO.hope.HopeListOutVO;
 import com.keep.keep_backfront.entity.Hope;
 import com.keep.keep_backfront.entity.HopeDetail;
 import com.keep.keep_backfront.service.HopeService;
@@ -36,7 +37,7 @@ public class HopeController {
 
     @ApiOperation("获取树洞中的所有树洞心愿列表")
     @PostMapping("allHopes")
-    public List<Hope> getAllHopesList(@RequestBody AllHopeListInVO request){
+    public List<HopeListOutVO> getAllHopesList(@RequestBody AllHopeListInVO request){
         return hopeService.getAllHopesList(request);
     }
 

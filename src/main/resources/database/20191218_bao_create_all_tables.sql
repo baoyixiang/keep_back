@@ -125,6 +125,7 @@ CREATE TABLE `user`  (
   `last_login_time` timestamp(0) NOT NULL COMMENT '最后登录时间',
   `beans_count` int(255) NOT NULL COMMENT '习惯豆的数量',
   `roles` json NOT NULL COMMENT '用户角色，用来鉴权',
+  `is_recommended` tinyint(1) NOT NULL comment '是否为推荐用户',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 

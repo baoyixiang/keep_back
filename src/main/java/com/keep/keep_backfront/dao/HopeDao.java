@@ -1,11 +1,14 @@
 package com.keep.keep_backfront.dao;
 
 import com.keep.keep_backfront.VO.inVO.hope.AddLikeHopeVO;
+import com.keep.keep_backfront.VO.inVO.hope.HopeListInVO;
+import com.keep.keep_backfront.VO.outVO.hope.HopeListOutVO;
 import com.keep.keep_backfront.entity.Hope;
 import com.keep.keep_backfront.entity.HopeComment;
 import com.keep.keep_backfront.entity.HopeDetail;
 import com.keep.keep_backfront.entity.UserLikeHope;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +32,15 @@ public interface HopeDao {
     Integer insertHope(Hope hope);
 
     //查询所有树洞心愿
-    @Select("select * from hope")
-    List<Hope> allHopesList();
+    @Select("SELECT `user`.`name`,`user`.avatar,hope.*\n" +
+            "from user\n" +
+            "RIGHT JOIN hope\n" +
+            "ON hope.create_user_id=`user`.id")
+//    @Results({
+//            @Result(column = "name",property = "name",jdbcType = JdbcType.VARCHAR),
+//            @Result(column = "avatar",property = "avatar",jdbcType = JdbcType.VARCHAR)
+//    })
+    List<HopeListOutVO> allHopesList();
 
     //根据userId返回该用户所有树洞心愿
     @Select("select * from hope " +

@@ -35,6 +35,7 @@ public class UserService {
                 user.setGender(userLoginVO.getGender());
                 user.setLastLoginTime(new Date());
                 user.setBeansCount(0);
+                user.setRecommended(false);
                 effectedNum = userDao.newUser(user);
 
                 if (effectedNum == 1) {

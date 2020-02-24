@@ -13,22 +13,15 @@ import java.util.List;
 public interface UserDao {
 
     //插入用户
-    @Insert("insert into user(wechat_id, avatar, name, personal_signature, gender, last_login_time, beans_count, roles) " +
+    @Insert("insert into user(wechat_id, avatar, name, personal_signature, gender, last_login_time, beans_count, roles,is_recommended) " +
             "values(#{wechatId}, #{avatar}, #{name}, #{personalSignature}, #{gender}, #{lastLoginTime}, #{beansCount}," +
-                    "#{roles, typeHandler=com.keep.keep_backfront.handler.ArrayJsonHandler})")
+                    "#{roles, typeHandler=com.keep.keep_backfront.handler.ArrayJsonHandler},#{isRecommended})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int newUser(User entity);
 
     //根据用户id查询用户
     @Select("select * from user where id=#{wechatId}")
     User getUserById(String wechatId);
-
-    //查询所有用户
-    @Select("select * from user")
-    @Results({
-            @Result(column = "roles", property = "roles", typeHandler = ArrayJsonHandler.class)
-    })
-    List<User> listUser();
 
     //插入关注的记录
     @Insert("insert into user_attention(user_id,followed_user_id,follow_time)" +
@@ -44,4 +37,19 @@ public interface UserDao {
     @Select("select * from user where id in" +
             "(select user_id from user_attention where followed_user_id=#{myId})")
     List<User> followsOfMe(Integer myId);
+
+    /**
+     * --------------------------------------------------------------------------
+     */
+
+    //查询所有用户
+    @Select("select * from user")
+    @Results({
+            @Result(column = "roles", property = "roles", typeHandler = ArrayJsonHandler.class)
+    })
+    List<User> listUser();
+
+    //将用户设置为推荐用户
+    @Update("UPDATE `user` SET is_recommended=ABS(1-is_recommended) WHERE id=#{userId}")
+    void setRecommended(Integer userId);
 }
