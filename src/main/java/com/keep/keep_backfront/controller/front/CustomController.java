@@ -44,7 +44,7 @@ public class CustomController {
     }
 
     @ApiOperation("用户修改加入习惯的信息")
-    @PostMapping("updata_join_custom")
+    @PostMapping("update_join_custom")
     public ResponseEntity updateJoinCustom(@RequestBody JoinCustomInVO request) {
         return customService.joinCustom(request);
     }
