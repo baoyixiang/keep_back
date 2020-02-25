@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.keep.keep_backfront.VO.inVO.user.UserFollowInVO;
 import com.keep.keep_backfront.VO.outVO.user.UserHomeOutVO;
 import com.keep.keep_backfront.VO.inVO.user.UserLoginVO;
+import com.keep.keep_backfront.VO.outVO.user.UserLoginOutVO;
 import com.keep.keep_backfront.dao.UserDao;
 import com.keep.keep_backfront.entity.User;
 import com.keep.keep_backfront.service.UserService;
@@ -32,8 +33,7 @@ public class UserController {
 
     @ApiOperation("用户登录")
     @PostMapping("login")
-    public ResponseEntity userLogin(@RequestBody UserLoginVO userLoginVO){
-        System.out.println(userLoginVO.toString());
+    public User userLogin(@RequestBody UserLoginVO userLoginVO){
         return userService.login(userLoginVO);
     }
 
@@ -71,5 +71,10 @@ public class UserController {
         Integer myId = Integer.parseInt(JSON.parseObject(str).get("myId").toString());
         return userDao.followsOfMe(myId);
     };
+
+    //获取用户推荐列表（待完成）
+    @ApiOperation("获取推荐用户列表")
+    @GetMapping("recommend_user_list")
+    public List<User> getRecommendUser() {return userDao.getUserByPopularity();}
 
 }

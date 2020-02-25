@@ -18,15 +18,15 @@ public class User implements Serializable {
   private Date lastLoginTime;
   private Integer beansCount;
   private JSONArray roles;
-  private Boolean isRecommended;
+  //private Boolean isRecommended;
 
-  public Boolean getRecommended() {
-    return isRecommended;
-  }
-
-  public void setRecommended(Boolean recommended) {
-    isRecommended = recommended;
-  }
+//  public Boolean getRecommended() {
+//    return isRecommended;
+//  }
+//
+//  public void setRecommended(Boolean recommended) {
+//    isRecommended = recommended;
+//  }
 
   public Integer getId() {
     return id;
