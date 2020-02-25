@@ -1,17 +1,16 @@
 package com.keep.keep_backfront.service;
 
-<<<<<<< HEAD
 import com.keep.keep_backfront.VO.inVO.user.UserFollowInVO;
 import com.keep.keep_backfront.VO.outVO.user.UserHomeOutVO;
-=======
 import com.alibaba.fastjson.JSONArray;
 import com.keep.keep_backfront.VO.outVO.user.*;
->>>>>>> 获取授权对接
 import com.keep.keep_backfront.VO.inVO.user.UserLoginVO;
 import com.keep.keep_backfront.dao.UserDao;
 import com.keep.keep_backfront.entity.User;
 import com.keep.keep_backfront.entity.UserAttention;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
