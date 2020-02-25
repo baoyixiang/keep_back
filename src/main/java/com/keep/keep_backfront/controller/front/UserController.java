@@ -1,6 +1,7 @@
 package com.keep.keep_backfront.controller.front;
 
-import com.keep.keep_backfront.VO.outVO.user.UserHomeVO;
+import com.keep.keep_backfront.VO.inVO.user.UserFollowInVO;
+import com.keep.keep_backfront.VO.outVO.user.UserHomeOutVO;
 import com.keep.keep_backfront.VO.inVO.user.UserLoginVO;
 import com.keep.keep_backfront.dao.UserDao;
 import com.keep.keep_backfront.entity.User;
@@ -18,39 +19,52 @@ import java.util.List;
 @RequestMapping("api/user")
 public class UserController {
 
-    @Autowired
+
     private UserService userService;
-    @Autowired
     private UserDao userDao;
+
+    @Autowired
+    public UserController(UserService userService,UserDao userDao) {
+        this.userService = userService;
+        this.userDao = userDao;
+    }
 
     @ApiOperation("用户登录")
     @PostMapping("login")
     public ResponseEntity userLogin(@RequestBody UserLoginVO userLoginVO){
-//        System.out.println(userLoginVO.toString());
+        System.out.println(userLoginVO.toString());
         return userService.login(userLoginVO);
     }
 
-    @ApiOperation("用户主页")
-    @PostMapping("userhome")
-    public UserHomeVO getUserHome(@RequestParam Integer userId){
+//    @ApiOperation("用户主页")
+//    @PostMapping("userHome")
+    public UserHomeOutVO getUserHome(@RequestBody Integer userId){
         return userService.userHome(userId);
     }
 
     @ApiOperation("关注用户")
     @PostMapping("follow")
-    public void userFollow(@RequestParam Integer userId,@RequestParam Integer followesUserId){
-        userService.attentionUser(userId,followesUserId);
+    public ResponseEntity userFollow(@RequestBody UserFollowInVO userFollowInVO){
+        userFollowInVO.checkParam();
+        return userService.attentionUser(userFollowInVO);
+    }
+
+    @ApiOperation("取消关注")
+    @PostMapping("cancelFollow")
+    public ResponseEntity cancelFollow(@RequestBody UserFollowInVO userFollowInVO){
+        userFollowInVO.checkParam();
+        return userService.cancelFollow(userFollowInVO);
     }
 
     @ApiOperation("我的关注")
     @PostMapping("following")
-    List<User> followingList(@RequestParam Integer myId){
+    List<User> followingList(@RequestBody Integer myId){
         return userDao.followingUser(myId);
     }
 
     @ApiOperation("我的粉丝")
     @PostMapping("fans")
-    List<User> fansList(@RequestParam Integer myId){
+    List<User> fansList(@RequestBody Integer myId){
         return userDao.followsOfMe(myId);
     };
 

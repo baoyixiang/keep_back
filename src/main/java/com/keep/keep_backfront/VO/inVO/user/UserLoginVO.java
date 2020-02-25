@@ -24,7 +24,7 @@ public class UserLoginVO {
     @Override
     public String toString() {
         return "UserLoginVO{" +
-                ", wechatId='" + wechatId + '\'' +
+                ", weChatId='" + wechatId + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", name='" + name + '\'' +
                 ", personalSignature='" + personalSignature + '\'' +

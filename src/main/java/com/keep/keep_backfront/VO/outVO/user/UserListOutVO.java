@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class UserListVO {
+public class UserListOutVO {
     private String wechatId;
     private String avatar;
     private String name;

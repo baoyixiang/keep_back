@@ -1,6 +1,7 @@
 package com.keep.keep_backfront.service;
 
-import com.keep.keep_backfront.VO.outVO.user.UserHomeVO;
+import com.keep.keep_backfront.VO.inVO.user.UserFollowInVO;
+import com.keep.keep_backfront.VO.outVO.user.UserHomeOutVO;
 import com.keep.keep_backfront.VO.inVO.user.UserLoginVO;
 import com.keep.keep_backfront.dao.UserDao;
 import com.keep.keep_backfront.entity.User;
@@ -15,8 +16,12 @@ import java.util.Date;
 @Component
 public class UserService {
 
-    @Autowired
     private UserDao userDao;
+
+    @Autowired
+    public UserService(UserDao userDao){
+        this.userDao = userDao;
+    }
 
     /**
      *  用户登录
@@ -54,26 +59,55 @@ public class UserService {
     /**
      * 查看用户主页
      */
-    public UserHomeVO userHome(Integer userId){
-        UserHomeVO userHomeVO = new UserHomeVO();
+    public UserHomeOutVO userHome(Integer userId){
+        UserHomeOutVO userHomeOutVO = new UserHomeOutVO();
 
-        return userHomeVO;
+        return userHomeOutVO;
     }
 
     /**
      * 关注用户
      */
-    public void attentionUser(Integer userId,Integer followedUserId){
-        UserAttention userAttention = new UserAttention();
-        userAttention.setUserId(userId);
-        userAttention.setFollowedUserId(followedUserId);
-        userAttention.setFollowTime(new Date());
-        try{
-            userDao.insertFollowing(userAttention);
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new RuntimeException("关注用户错误");
+    public ResponseEntity attentionUser(UserFollowInVO userFollowInVO){
+        try {
+            int effectedNum = 0;
+
+            UserAttention userAttention = new UserAttention();
+            userAttention.setUserId(userFollowInVO.getUserId());
+            userAttention.setFollowedUserId(userFollowInVO.getFollowedUserId());
+            userAttention.setFollowTime(new Date());
+
+            effectedNum = userDao.insertFollowing(userAttention);
+
+            if (effectedNum == 1) {
+                return ResponseEntity.status(HttpStatus.OK).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
+    /**
+     * 取消关注
+     * @return
+     */
+    public ResponseEntity cancelFollow(UserFollowInVO userFollowInVO){
+        try {
+            int effectedNum = 0;
+
+            effectedNum = userDao.deleteFollowing(userFollowInVO);
+
+            if (effectedNum == 1) {
+                return ResponseEntity.status(HttpStatus.OK).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

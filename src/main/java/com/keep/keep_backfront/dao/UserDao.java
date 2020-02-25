@@ -1,5 +1,6 @@
 package com.keep.keep_backfront.dao;
 
+import com.keep.keep_backfront.VO.inVO.user.UserFollowInVO;
 import com.keep.keep_backfront.entity.User;
 import com.keep.keep_backfront.entity.UserAttention;
 import com.keep.keep_backfront.handler.ArrayJsonHandler;
@@ -26,7 +27,10 @@ public interface UserDao {
     //插入关注的记录
     @Insert("insert into user_attention(user_id,followed_user_id,follow_time)" +
             "values(#{userId},#{followedUserId},#{followTime})")
-    int insertFollowing(UserAttention userAttention);
+    Integer insertFollowing(UserAttention userAttention);
+    //删除关注的记录
+    @Delete("DELETE FROM user_attention WHERE user_id=#{userId} AND followed_user_id=#{followedUserId}")
+    Integer deleteFollowing(UserFollowInVO userFollowInVO);
 
     //查找我关注的人
     @Select("select * from user where id in" +
@@ -51,5 +55,5 @@ public interface UserDao {
 
     //将用户设置为推荐用户
     @Update("UPDATE `user` SET is_recommended=ABS(1-is_recommended) WHERE id=#{userId}")
-    void setRecommended(Integer userId);
+    Integer setRecommended(Integer userId);
 }

@@ -42,6 +42,10 @@ public interface HopeDao {
 //    })
     List<HopeListOutVO> allHopesList();
 
+    //根据心愿id获取心愿
+    @Select("select * from hope where id=#{hopeId}")
+    Hope getHopeByHopeId(Integer hopeId);
+
     //根据userId返回该用户所有树洞心愿
     @Select("select * from hope " +
             "where create_user_id=#{userId}")
@@ -51,16 +55,23 @@ public interface HopeDao {
     @Select("select * from hope order by rand() limit 1")
     Hope oneRandHope();
 
+
+
     //插入一条心愿评论
     @Insert("insert into hope_comments(user_id,hope_id,comment_time,comment_content,reply_to)" +
             "values(#{userId},#{hopeId},#{commentTime},#{commentContent},#{replyTo})")
-    Integer insetrHopeComment(HopeComment hopeComment);
+    Integer insertHopeComment(HopeComment hopeComment);
     //对应心愿得评论数+1
     @Update("update hope set CommentCount=CommentCount+1 where id=#{hopeId}")
-    Integer updateHopeCommentCount(HopeComment hopeComment);
+    Integer updateHopeCommentCount(Integer hopeId);
+    //删除一条心愿评论
+    @Delete("delete from hope_comments where id=#{HopeCommentId}")
+    Integer deleteHopeComment(Integer HopeCommentId);
+    //对应心愿评论数-1
+    @Update("update hope set CommentCount=CommentCount-1 where id=#{hopeId}")
+    Integer updateHopeCommentCount0(Integer hopeId);
 
-
-    //插入一条心愿点赞记录
+    //点赞，插入一条心愿点赞记录
     @Insert("insert into user_like_hope(user_id,hope_id,like_time,like_state)" +
             "values(#{userId},#{hopeId},#{likeTime},#{likeState})")
     Integer insertUserLikeHope(UserLikeHope userLikeHope);
@@ -76,9 +87,7 @@ public interface HopeDao {
     @Select("select * from hope_comments where hope_id=#{hopeId}")
     List<HopeComment> hopeComments(Integer hopeId);
 
-    //根据心愿id获取心愿
-    @Select("select * from hope where id=#{hopeId}")
-    Hope getHopeByHopeId(Integer hopeId);
+
 
 //    //查询心愿的点赞数
 //    @Select("select likeCount distinct from hope_details_view where HopeId=#{hopeId}")
@@ -94,10 +103,10 @@ public interface HopeDao {
 
     //删除心愿
     @Delete("delete from hope where id=#{hopeId}")
-    void deleteHope(Integer hopeId);
+    Integer deleteHope(Integer hopeId);
 
-    //根据心愿id删除心愿评论
+    //根据心愿id删除所有心愿评论
     @Delete("delete from hope_comments where hope_id=#{hopeId}")
-    void deleteHopeCommentByhopeId(Integer hopeId);
+    void deleteHopeCommentsByHopeId(Integer hopeId);
 
 }

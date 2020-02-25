@@ -19,8 +19,12 @@ import java.util.List;
 @Service
 public class HopeService {
 
-    @Autowired
     private HopeDao hopeDao;
+
+    @Autowired
+    public HopeService(HopeDao hopeDao){
+        this.hopeDao = hopeDao;
+    }
 
     /**
      * 在树洞中发布一条心愿
@@ -49,6 +53,23 @@ public class HopeService {
         }
     }
 
+//    /**
+//     *  用户删除自己的心愿(未完)
+//     */
+//    public ResponseEntity deleteUserOwnHope(HopeDeleteInVO hopeDeleteInVO){
+//        try {
+//            int effectedNum = 1;
+//            if (effectedNum == 1) {
+//                return ResponseEntity.status(HttpStatus.OK).build();
+//            } else {
+//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//            }
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
+
 
     /**
      *  获取树洞中的树洞心愿列表
@@ -60,7 +81,7 @@ public class HopeService {
             hopeList = hopeDao.allHopesList();
         }catch (Exception e){
             e.printStackTrace();
-            throw new RuntimeException("allhopelist信息获取失败");
+            throw new RuntimeException("allHopeList信息获取失败");
         }
         return hopeList;
     }
@@ -76,7 +97,7 @@ public class HopeService {
             System.out.println(hopeList);
         }catch (Exception e){
             e.printStackTrace();
-            throw new RuntimeException("hopelist信息获取失败");
+            throw new RuntimeException("hopeList信息获取失败");
         }
         return hopeList;
     }
@@ -105,8 +126,25 @@ public class HopeService {
         hopeComment.setReplyTo(publishHopeCommentsInVO.getReplyTo());
 
         try {
-            int effectedNum = hopeDao.insetrHopeComment(hopeComment);
-            effectedNum = hopeDao.updateHopeCommentCount(hopeComment);
+            int effectedNum = hopeDao.insertHopeComment(hopeComment);//插入心愿评论
+            effectedNum = hopeDao.updateHopeCommentCount(hopeComment.getHopeId());//对应心愿的评论数+1
+            if (effectedNum == 1) {
+                return ResponseEntity.status(HttpStatus.OK).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    /**
+     * 用户删除一条hope评论
+     */
+    public ResponseEntity deleteHopeComment(HopeComment hopeComment){
+        try {
+            int effectedNum = hopeDao.deleteHopeComment(hopeComment.getId());//删除心愿评论
+            hopeDao.updateHopeCommentCount0(hopeComment.getHopeId());//对应心愿的评论数-1
             if (effectedNum == 1) {
                 return ResponseEntity.status(HttpStatus.OK).build();
             } else {
@@ -119,7 +157,7 @@ public class HopeService {
     }
 
     /**
-     *用户点赞一条hope，产生一条userlikehope记录
+     *用户点赞一条hope，产生一条userLikeHope记录
      */
     public ResponseEntity likeHope(AddLikeHopeVO addLikeHopeVO){
         UserLikeHope userLikeHope = new UserLikeHope();
@@ -168,5 +206,23 @@ public class HopeService {
             throw new RuntimeException("hopeDetail信息获取失败");
         }
         return hopeDetail;
+    }
+
+    /**
+     *  删除一条心愿
+     */
+    public ResponseEntity hopeDelete(Integer hopeId){
+        try {
+            int effectedNum = hopeDao.deleteHope(hopeId);//删除心愿
+            hopeDao.deleteHopeCommentsByHopeId(hopeId);//删除对应心愿的所有评论
+            if (effectedNum == 1) {
+                return ResponseEntity.status(HttpStatus.OK).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

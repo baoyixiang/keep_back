@@ -9,6 +9,7 @@ import com.keep.keep_backfront.service.HopeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,20 +20,21 @@ import java.util.List;
 @RequestMapping("backApi/hope")
 public class HopeBackController {
 
-    @Autowired
-    private HopeDao hopeDao;
-    @Autowired
     private HopeService hopeService;
+
+    @Autowired
+    public HopeBackController(HopeService hopeService){
+        this.hopeService = hopeService;
+    }
 
     @ApiOperation("删除心愿")
     @PostMapping("delHope")
-    public void deleteHopeById(@RequestParam Integer hopeId){
-        hopeDao.deleteHope(hopeId);//删除心愿
-        hopeDao.deleteHopeCommentByhopeId(hopeId);//删除对应心愿的所有评论
+    public ResponseEntity deleteHopeById(@RequestBody Integer hopeId){
+        return hopeService.hopeDelete(hopeId);
     }
 
     @ApiOperation("心愿列表")
-    @PostMapping("allhopesList")
+    @PostMapping("allHopesList")
     List<HopeListOutVO> hopesList(@RequestBody AllHopeListInVO allHopeListInVO){
         return hopeService.getAllHopesList(allHopeListInVO);
     }
