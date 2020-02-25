@@ -1,5 +1,6 @@
 package com.keep.keep_backfront.controller.front;
 
+import com.alibaba.fastjson.JSON;
 import com.keep.keep_backfront.VO.inVO.user.UserFollowInVO;
 import com.keep.keep_backfront.VO.outVO.user.UserHomeOutVO;
 import com.keep.keep_backfront.VO.inVO.user.UserLoginVO;
@@ -38,7 +39,8 @@ public class UserController {
 
 //    @ApiOperation("用户主页")
 //    @PostMapping("userHome")
-    public UserHomeOutVO getUserHome(@RequestBody Integer userId){
+    public UserHomeOutVO getUserHome(@RequestBody String str){
+        Integer userId = Integer.parseInt(JSON.parseObject(str).get("userId").toString());
         return userService.userHome(userId);
     }
 
@@ -58,13 +60,15 @@ public class UserController {
 
     @ApiOperation("我的关注")
     @PostMapping("following")
-    List<User> followingList(@RequestBody Integer myId){
+    List<User> followingList(@RequestBody String str){
+        Integer myId = Integer.parseInt(JSON.parseObject(str).get("myId").toString());
         return userDao.followingUser(myId);
     }
 
     @ApiOperation("我的粉丝")
     @PostMapping("fans")
-    List<User> fansList(@RequestBody Integer myId){
+    List<User> fansList(@RequestBody String str){
+        Integer myId = Integer.parseInt(JSON.parseObject(str).get("myId").toString());
         return userDao.followsOfMe(myId);
     };
 

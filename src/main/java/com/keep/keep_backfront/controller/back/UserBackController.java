@@ -1,5 +1,6 @@
 package com.keep.keep_backfront.controller.back;
 
+import com.alibaba.fastjson.JSON;
 import com.keep.keep_backfront.dao.HopeDao;
 import com.keep.keep_backfront.dao.UserDao;
 import com.keep.keep_backfront.entity.User;
@@ -34,7 +35,8 @@ public class UserBackController {
 
     @ApiOperation("设置推荐用户")
     @PostMapping("recommend")
-    public ResponseEntity setRecommended(@RequestBody Integer userId){
+    public ResponseEntity setRecommended(@RequestBody String str){
+        Integer userId = Integer.parseInt(JSON.parseObject(str).get("userId").toString());
         try {
             int effectedNum = userDao.setRecommended(userId);;
             if (effectedNum == 1) {

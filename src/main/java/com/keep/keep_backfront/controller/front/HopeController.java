@@ -1,5 +1,6 @@
 package com.keep.keep_backfront.controller.front;
 
+import com.alibaba.fastjson.JSON;
 import com.keep.keep_backfront.VO.inVO.hope.*;
 import com.keep.keep_backfront.VO.outVO.hope.HopeListOutVO;
 import com.keep.keep_backfront.entity.Hope;
@@ -78,7 +79,8 @@ public class HopeController {
 
     @ApiOperation("获取心愿详情hopeDetail")
     @PostMapping("hopeDetail")
-    public HopeDetail getHopeDetail(@RequestBody Integer hopeId){
+    public HopeDetail getHopeDetail(@RequestBody String str){
+        Integer hopeId = Integer.parseInt(JSON.parseObject(str).get("hopeId").toString());
         return hopeService.hopeDetail(hopeId);
     }
 

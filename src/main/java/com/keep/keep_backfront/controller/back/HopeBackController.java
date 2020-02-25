@@ -1,6 +1,8 @@
 package com.keep.keep_backfront.controller.back;
 
+import com.alibaba.fastjson.JSON;
 import com.keep.keep_backfront.VO.inVO.hope.AllHopeListInVO;
+import com.keep.keep_backfront.VO.inVO.hope.HopeDeleteInVO;
 import com.keep.keep_backfront.VO.inVO.hope.HopeListInVO;
 import com.keep.keep_backfront.VO.outVO.hope.HopeListOutVO;
 import com.keep.keep_backfront.dao.HopeDao;
@@ -29,7 +31,8 @@ public class HopeBackController {
 
     @ApiOperation("删除心愿")
     @PostMapping("delHope")
-    public ResponseEntity deleteHopeById(@RequestBody Integer hopeId){
+    public ResponseEntity deleteHopeById(@RequestBody String str){//接受json转为string
+        Integer hopeId = Integer.parseInt(JSON.parseObject(str).get("hopeId").toString());//取出hopeId并转换
         return hopeService.hopeDelete(hopeId);
     }
 
