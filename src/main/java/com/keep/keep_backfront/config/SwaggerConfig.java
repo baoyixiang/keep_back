@@ -16,20 +16,9 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.keep.keep_backfront.controller.back"))
+                .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
-                .build()
-                .groupName("后台管理接口");
-    }
-
-    @Bean
-    public Docket docketTintin(){
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.keep.keep_backfront.controller.front"))
-                .paths(PathSelectors.any())
-                .build()
-                .groupName("微信小程序接口");
+                .build();
     }
 
 }

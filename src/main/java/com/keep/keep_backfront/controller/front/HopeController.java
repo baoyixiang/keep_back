@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @Api("小程序端树洞相关api")
 @RestController
 @RequestMapping("api/user/hope")
