@@ -26,12 +26,12 @@ CREATE TABLE `check_in`  (
   `user_id` int(11) NOT NULL COMMENT '用户id',
   `custome_id` int(11) NOT NULL COMMENT '习惯id',
   `check_in_time` timestamp(0) NOT NULL COMMENT '本次打卡时间',
-  `word_content` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '打卡的文字内容',
+  `word_content` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '打卡的文字内容',
   `images` json NULL COMMENT '打卡的图片内容的url',
-  `voice` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '打卡的语音内容',
+  `voice` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '打卡的语音内容',
   `days` int(255) NOT NULL COMMENT '本次打卡是此用户在此习惯上打卡的第几天',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for check_in_comments
@@ -42,10 +42,10 @@ CREATE TABLE `check_in_comments`  (
   `user_id` int(11) NOT NULL COMMENT '用户id',
   `check_in_id` int(11) NOT NULL COMMENT '打卡记录的id',
   `comment_time` timestamp(0) NOT NULL COMMENT '评论时间',
-  `comment_content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '评论内容',
+  `comment_content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '评论内容',
   `reply_to` int(255) NOT NULL COMMENT '回复的用户，如果没有内容，说明回复的是打卡记录而不是用户',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for custom
@@ -53,14 +53,14 @@ CREATE TABLE `check_in_comments`  (
 DROP TABLE IF EXISTS `custom`;
 CREATE TABLE `custom`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增id',
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '习惯名称',
-  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'logo的url',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '习惯名称',
+  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'logo的url',
   `create_user_id` int(11) NOT NULL COMMENT '创建习惯的用户的id',
   `create_time` timestamp(0) NOT NULL COMMENT '创建时间',
   `tags` json NULL COMMENT '习惯的标签',
   `is_default` tinyint(1) NOT NULL COMMENT '是否是系统默认的习惯（即管理员创建的习惯）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for hope
@@ -68,9 +68,9 @@ CREATE TABLE `custom`  (
 DROP TABLE IF EXISTS `hope`;
 CREATE TABLE `hope`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `word_content` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '心愿的文字内容',
+  `word_content` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '心愿的文字内容',
   `images` json NULL COMMENT '心愿的图片内容',
-  `voice` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '心愿的语音内容',
+  `voice` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '心愿的语音内容',
   `create_user_id` int(11) NOT NULL COMMENT '创建心愿的用户的id',
   `create_time` timestamp(0) NOT NULL COMMENT '创建时间',
   `is_anonymous` tinyint(1) NOT NULL COMMENT '是否匿名，如果匿名，那么发布的时候不展示是谁发布的',
@@ -78,7 +78,7 @@ CREATE TABLE `hope`  (
   `likeCount` int(11) NOT NULL comment '心愿点赞数',
   `CommentCount` int(11) NOT NULL comment '心愿评论数',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for hope_comments
@@ -89,10 +89,10 @@ CREATE TABLE `hope_comments`  (
   `user_id` int(11) NOT NULL,
   `hope_id` int(11) NOT NULL,
   `comment_time` timestamp(0) NOT NULL COMMENT '评论时间',
-  `comment_content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '评论内容',
+  `comment_content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '评论内容',
   `reply_to` int(255) NOT NULL COMMENT '回复的用户，如果没有内容，说明回复的是打卡记录而不是用户',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for join_custom
@@ -109,7 +109,7 @@ CREATE TABLE `join_custom`  (
   `beans_count` int(255) NOT NULL COMMENT '投入的习惯豆',
   `check_days_count` int(255) NOT NULL COMMENT '已经打卡的天数',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for user
@@ -117,17 +117,17 @@ CREATE TABLE `join_custom`  (
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增id',
-  `wechat_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '微信用户的id',
-  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户头像',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户昵称',
-  `personal_signature` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '个性签名',
+  `wechat_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '微信用户的id',
+  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户头像',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户昵称',
+  `personal_signature` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '个性签名',
   `gender` tinyint(1) NOT NULL COMMENT '性别',
   `last_login_time` timestamp(0) NOT NULL COMMENT '最后登录时间',
   `beans_count` int(255) NOT NULL COMMENT '习惯豆的数量',
   `roles` json NOT NULL COMMENT '用户角色，用来鉴权',
   `is_recommended` tinyint(1) NOT NULL comment '是否为推荐用户',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for user_attention
@@ -139,7 +139,7 @@ CREATE TABLE `user_attention`  (
   `followed_user_id` int(11) NOT NULL COMMENT '被关注用户的id',
   `follow_time` timestamp(0) NOT NULL COMMENT '关注时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for user_like_check_in
@@ -151,7 +151,7 @@ CREATE TABLE `user_like_check_in`  (
   `check_in_id` int(11) NOT NULL COMMENT '打卡记录id',
   `like_time` timestamp(0) NOT NULL COMMENT '点赞的时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for user_like_hope
@@ -165,6 +165,6 @@ CREATE TABLE `user_like_hope`  (
   `like_time` timestamp(0) NOT NULL COMMENT '点赞的时间',
   #  PRIMARY KEY (`id`) USING BTREE
     primary key (user_id,hope_id)   COMMENT '用户id和心愿id两列联合作为主键'
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
