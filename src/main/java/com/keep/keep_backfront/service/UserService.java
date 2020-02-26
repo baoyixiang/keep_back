@@ -51,7 +51,7 @@ public class UserService {
                 e.printStackTrace();
             }
         }
-        System.out.println("3");
+        user = userDao.getUserByWechatId(wxResponse.getOpenId());
         return user;
     }
 
