@@ -17,6 +17,7 @@ import java.util.List;
 /**
  * @author bao
  */
+@CrossOrigin
 @Api("小程序端习惯相关Api")
 @RestController
 @RequestMapping("api/user/custom")

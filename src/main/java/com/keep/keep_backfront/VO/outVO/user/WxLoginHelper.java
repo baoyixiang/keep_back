@@ -9,9 +9,10 @@ import org.springframework.stereotype.Component;
 public class WxLoginHelper {
 
     public WxResponse loginWx(String code) {
-        String wxspAppid = "wx8b2d8f761f990064";
+        String wxspAppid = "wxfbc41363fcf878a0";
         //小程序的 app secret (在微信小程序管理后台获取)
-        String wxspSecret = "c27bfefcb7d983b269441abeddc53880";
+        String wxspSecret = "44b4422dcb0339bc1035411786e8bbdc";
+        //c27bfefcb7d983b269441abeddc53880
         //授权（必填）
         String grant_type = "authorization_code";
         String params = "appid=" + wxspAppid + "&secret=" + wxspSecret + "&js_code=" + code + "&grant_type=" + grant_type;
