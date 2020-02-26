@@ -14,9 +14,9 @@ import java.util.List;
 public interface UserDao {
 
     //插入用户
-    @Insert("insert into user(wechat_id, avatar, name, personal_signature, gender, last_login_time, beans_count, roles) " +
+    @Insert("insert into user(wechat_id, avatar, name, personal_signature, gender, last_login_time, beans_count, roles, is_recommended) " +
             "values(#{wechatId}, #{avatar}, #{name}, #{personalSignature}, #{gender}, #{lastLoginTime}, #{beansCount}," +
-                    "#{roles, typeHandler=com.keep.keep_backfront.handler.ArrayJsonHandler})")
+                    "#{roles, typeHandler=com.keep.keep_backfront.handler.ArrayJsonHandler}, #{isRecommended})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int newUser(User entity);
 

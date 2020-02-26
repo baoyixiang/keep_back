@@ -45,7 +45,7 @@ public class UserService {
                 user.setLastLoginTime(new Date());
                 user.setBeansCount(0);
                 user.setRoles(new JSONArray());
-                //user.setRecommended(false);
+                user.setRecommended(false);
                 userDao.newUser(user);
             } catch (Exception e) {
                 e.printStackTrace();
