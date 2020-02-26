@@ -37,6 +37,7 @@ public class HopeService {
         hope.setCreateTime(request.getCreateTime());
         hope.setAnonymous(request.getIsAnonymous());
         hope.setSeeSelf(request.getIsSeeSelf());
+        hope.setImages(request.getImages());    //存入images
         hope.setLikeCount(0);
         hope.setCommentCount(0);
 
@@ -201,6 +202,7 @@ public class HopeService {
             hopeDetail.setCommentCount(hope.getCommentCount());
             hopeDetail.setHopeId(hope.getId());
             hopeDetail.setHopecomments(hopeDao.hopeComments(hopeId));
+            hopeDetail.setImages(hope.getImages());
         }catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException("hopeDetail信息获取失败");

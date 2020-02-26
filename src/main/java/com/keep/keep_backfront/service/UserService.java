@@ -1,6 +1,10 @@
 package com.keep.keep_backfront.service;
 
+import com.github.pagehelper.PageHelper;
+import com.keep.keep_backfront.VO.inVO.hope.AllHopeListInVO;
+import com.keep.keep_backfront.VO.inVO.user.AllUsersListInVO;
 import com.keep.keep_backfront.VO.inVO.user.UserFollowInVO;
+import com.keep.keep_backfront.VO.outVO.hope.HopeListOutVO;
 import com.keep.keep_backfront.VO.outVO.user.UserHomeOutVO;
 import com.alibaba.fastjson.JSONArray;
 import com.keep.keep_backfront.VO.outVO.user.*;
@@ -12,7 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class UserService {
@@ -108,5 +114,29 @@ public class UserService {
             ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    /**
+     *  获取所有用户列表(返回封装后的数据)
+     */
+    public List<AllUsersListOutVO> getAllUsersList(AllUsersListInVO request){
+        PageHelper.startPage(request.getPageNo(), request.getPageSize());
+        List<User> users = new ArrayList<>();
+        List<AllUsersListOutVO> allUsersListOutVOS = new ArrayList<AllUsersListOutVO>();
+        try{
+            users = userDao.listUser(); //查询所有数据库用户
+            for (User user:users) {
+                AllUsersListOutVO allUsersListOutVO = new AllUsersListOutVO();
+                allUsersListOutVO.setUser(user);
+                allUsersListOutVO.setFollowedCount(userDao.followsOfMe(user.getId()).size());//被关注数
+                allUsersListOutVO.setFollowingCount(userDao.followingUser(user.getId()).size());//关注数
+                System.out.println(allUsersListOutVO.toString());
+                allUsersListOutVOS.add(allUsersListOutVO);//加入返回的list
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("allUsersList信息获取失败");
+        }
+        return allUsersListOutVOS;
     }
 }

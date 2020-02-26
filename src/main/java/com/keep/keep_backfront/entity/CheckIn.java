@@ -1,6 +1,8 @@
 package com.keep.keep_backfront.entity;
 
 
+import com.alibaba.fastjson.JSONArray;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -12,7 +14,7 @@ public class CheckIn implements Serializable {
   private Integer customeId;
   private Date checkInTime;
   private String wordContent;
-  private List<String> images;
+  private JSONArray images = new JSONArray();
   private String voice;
   private Integer days;
 
@@ -57,11 +59,11 @@ public class CheckIn implements Serializable {
     this.wordContent = wordContent;
   }
 
-  public List<String> getImages() {
+  public JSONArray getImages() {
     return images;
   }
 
-  public void setImages(List<String> images) {
+  public void setImages(JSONArray images) {
     this.images = images;
   }
 

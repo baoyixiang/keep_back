@@ -1,6 +1,8 @@
 package com.keep.keep_backfront.controller.back;
 
 import com.alibaba.fastjson.JSON;
+import com.keep.keep_backfront.VO.inVO.user.AllUsersListInVO;
+import com.keep.keep_backfront.VO.outVO.user.AllUsersListOutVO;
 import com.keep.keep_backfront.dao.HopeDao;
 import com.keep.keep_backfront.dao.UserDao;
 import com.keep.keep_backfront.entity.User;
@@ -21,16 +23,19 @@ import java.util.List;
 public class UserBackController {
 
     private UserDao userDao;
+    private UserService userService;
 
     @Autowired
-    public UserBackController(UserDao userDao){
+    public UserBackController(UserDao userDao,UserService userService){
         this.userDao = userDao;
+        this.userService = userService;
     }
 
+
     @ApiOperation("获取所有用户列表")
-    @GetMapping("listUsers")
-    public List<User> getAllUser() {
-        return userDao.listUser();
+    @PostMapping("listUsers")
+    public List<AllUsersListOutVO> getAllUser(@RequestBody AllUsersListInVO request) {
+        return userService.getAllUsersList(request);
     }
 
     @ApiOperation("设置推荐用户")
