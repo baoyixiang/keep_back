@@ -3,7 +3,6 @@ package com.keep.keep_backfront.controller.front;
 import com.github.pagehelper.PageInfo;
 import com.keep.keep_backfront.VO.inVO.custom.*;
 import com.keep.keep_backfront.VO.outVO.custom.CustomDetailOutVO;
-import com.keep.keep_backfront.VO.outVO.custom.RecommendCustomOutVO;
 import com.keep.keep_backfront.entity.Custom;
 import com.keep.keep_backfront.service.CustomService;
 import io.swagger.annotations.Api;
@@ -59,7 +58,7 @@ public class CustomController {
 
     @ApiOperation("获取推荐习惯列表")
     @PostMapping("recommend_custom_list")
-    public List<RecommendCustomOutVO> getRecommendCustom(@RequestBody RecommendListInVO request) {
+    public List<Custom> getRecommendCustom(@RequestBody RecommendListInVO request) {
         return customService.getRecommendCustomList(request);
     }
 }

@@ -27,7 +27,7 @@ public interface CustomDao {
     List<Custom> customList(Integer userId, String title, Boolean isDefault);
 
     @Insert("insert into join_custom(user_id,custom_id,join_time,is_public,target_days,is_completed,beans_count,check_days_count)" +
-            "values(#{userId},#{customId},#{joinTime},#{isPublic},#{targetDays},#{isCompleted},#{beadsCount}," +
+            "values(#{userId},#{customId},#{joinTime},#{isPublic},#{targetDays},#{isCompleted},#{beansCount}," +
             "#{checkDaysCount})")
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
     Integer joinCustom(JoinCustom joinCustom);

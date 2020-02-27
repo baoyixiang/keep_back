@@ -7,5 +7,5 @@ import java.util.List;
 @Data
 public class RecommendListInVO {
     private Integer userId;
-    private List<String> tagsList;
+    private String tag;
 }

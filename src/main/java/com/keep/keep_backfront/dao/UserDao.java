@@ -57,8 +57,8 @@ public interface UserDao {
     List<User> listUser();
 
     //获取用户推荐列表（待完成）
-    @Select("select * from user order by id")
-    List<User> getUserByPopularity();
+    @Select("select * from user where is_recommended=1")
+    List<User> getRecommendedUser();
 
     //将用户设置为推荐用户
     @Update("UPDATE `user` SET is_recommended=ABS(1-is_recommended) WHERE id=#{userId}")
