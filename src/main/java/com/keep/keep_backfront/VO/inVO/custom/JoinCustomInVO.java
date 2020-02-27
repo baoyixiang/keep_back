@@ -14,5 +14,5 @@ public class JoinCustomInVO {
     private Boolean isCompleted;
     private Integer beansCount;
     private Integer checkDaysCount;
-
+    private Boolean isArchive;
 }

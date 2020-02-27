@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.keep.keep_backfront.VO.inVO.custom.*;
 import com.keep.keep_backfront.VO.outVO.custom.CustomDetailOutVO;
+import com.keep.keep_backfront.VO.outVO.custom.CustomListOutVO;
 import com.keep.keep_backfront.VO.outVO.custom.RecommendCustomOutVO;
 import com.keep.keep_backfront.dao.CheckInDao;
 import com.keep.keep_backfront.dao.CustomDao;
@@ -56,6 +57,20 @@ public class CustomService {
         try {
             int effectedNum = customDao.insertCustom(custom);
             if (effectedNum == 1) {
+                if (!isDefault) {
+                    // 用户要加入习惯
+                    JoinCustom joinCustom = new JoinCustom();
+                    joinCustom.setCheckDaysCount(0);
+                    joinCustom.setBeansCount(0);
+                    joinCustom.setCompleted(false);
+                    joinCustom.setTargetDays(0);
+                    joinCustom.setPublic(true);
+                    joinCustom.setJoinTime(new Date());
+                    joinCustom.setCustomId(custom.getId());
+                    joinCustom.setUserId(request.getUserId());
+                    joinCustom.setArchive(false);
+                    customDao.joinCustom(joinCustom);
+                }
                 return ResponseEntity.status(HttpStatus.OK).build();
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -66,14 +81,42 @@ public class CustomService {
         }
     }
 
-    /**
-     * 获取习惯列表
-     */
+    // 这部分是管理员端的
     public PageInfo<Custom> getCustomList(CustomListInVO inVO) {
         PageHelper.startPage(inVO.getPageNo(), inVO.getPageSize());
         try {
             List<Custom> list = customDao.customList(inVO.getUserId(), inVO.getTitle(), inVO.getIsDefault());
             return new PageInfo<>(list);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("信息获取失败");
+        }
+    }
+
+    /**
+     * 获取一个用户加入的习惯列表
+     */
+    public PageInfo<CustomListOutVO> getUserCustomList(CustomListInVO inVO, Boolean isCreateOnly) {
+        PageHelper.startPage(inVO.getPageNo(), inVO.getPageSize());
+        try {
+            List<JoinCustom> list = customDao.findJoinCustomsByUserId(inVO.getUserId());
+            List<CustomListOutVO> result = new ArrayList<>();
+            list.stream().forEach(it -> {
+                CustomListOutVO outVO = new CustomListOutVO();
+                Custom custom = customDao.findCustomById(it.getCustomId());
+                if (isCreateOnly) {
+                    if (custom.getCreateUserId().equals(inVO.getUserId())) {
+                        outVO.setCustom(custom);
+                        outVO.setJoinCustom(it);
+                        result.add(outVO);
+                    }
+                } else {
+                    outVO.setJoinCustom(it);
+                    outVO.setCustom(custom);
+                    result.add(outVO);
+                }
+            });
+            return new PageInfo<>(result);
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new RuntimeException("信息获取失败");
@@ -93,6 +136,7 @@ public class CustomService {
         joinCustom.setCompleted(false);
         joinCustom.setBeansCount(inVO.getBeansCount());
         joinCustom.setCheckDaysCount(0);
+        joinCustom.setArchive(false);
 
         try {
             customDao.joinCustom(joinCustom);

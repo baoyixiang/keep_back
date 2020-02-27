@@ -15,7 +15,15 @@ public class JoinCustom implements Serializable {
   private Boolean isCompleted;
   private Integer beansCount;
   private Integer checkDaysCount;
+  private Boolean isArchive;
 
+  public Boolean getArchive() {
+    return isArchive;
+  }
+
+  public void setArchive(Boolean archive) {
+    isArchive = archive;
+  }
 
   public Integer getId() {
     return id;

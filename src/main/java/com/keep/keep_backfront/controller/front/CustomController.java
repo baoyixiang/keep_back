@@ -3,6 +3,7 @@ package com.keep.keep_backfront.controller.front;
 import com.github.pagehelper.PageInfo;
 import com.keep.keep_backfront.VO.inVO.custom.*;
 import com.keep.keep_backfront.VO.outVO.custom.CustomDetailOutVO;
+import com.keep.keep_backfront.VO.outVO.custom.CustomListOutVO;
 import com.keep.keep_backfront.VO.outVO.custom.RecommendCustomOutVO;
 import com.keep.keep_backfront.entity.Custom;
 import com.keep.keep_backfront.service.CustomService;
@@ -33,10 +34,16 @@ public class CustomController {
         return customService.userInsert(request);
     }
 
-    @ApiOperation("获取习惯列表")
-    @PostMapping("list")
-    public PageInfo<Custom> getCustomList(@RequestBody CustomListInVO request) {
-        return customService.getCustomList(request);
+    @ApiOperation("用户获取加入的习惯列表")
+    @PostMapping("join_list")
+    public PageInfo<CustomListOutVO> getJoinCustomList(@RequestBody CustomListInVO request) {
+        return customService.getUserCustomList(request, false);
+    }
+
+    @ApiOperation("用户获取自己创建的习惯的列表")
+    @PostMapping("create_list")
+    public PageInfo<CustomListOutVO> getCustomList(@RequestBody CustomListInVO request) {
+        return customService.getUserCustomList(request, true);
     }
 
     @ApiOperation("用户加入一个习惯")

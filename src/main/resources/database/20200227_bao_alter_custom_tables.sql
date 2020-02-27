@@ -1,0 +1,1 @@
+ALTER TABLE join_custom ADD is_archive tinyint(1)

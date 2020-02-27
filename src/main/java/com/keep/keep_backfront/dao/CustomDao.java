@@ -9,6 +9,7 @@ import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -26,9 +27,9 @@ public interface CustomDao {
     })
     List<Custom> customList(Integer userId, String title, Boolean isDefault);
 
-    @Insert("insert into join_custom(user_id,custom_id,join_time,is_public,target_days,is_completed,beans_count,check_days_count)" +
+    @Insert("insert into join_custom(user_id,custom_id,join_time,is_public,target_days,is_completed,beans_count,check_days_count,is_archive)" +
             "values(#{userId},#{customId},#{joinTime},#{isPublic},#{targetDays},#{isCompleted},#{beadsCount}," +
-            "#{checkDaysCount})")
+            "#{checkDaysCount},#{isArchive})")
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
     Integer joinCustom(JoinCustom joinCustom);
 
@@ -45,6 +46,9 @@ public interface CustomDao {
 
     @Select("select * from join_custom where id = #{id}")
     JoinCustom findJoinCustomById(Integer id);
+
+    @Select("select * from join_custom where user_id=#{userId}")
+    List<JoinCustom> findJoinCustomsByUserId(Integer userId);
 
     @Select("select * from join_custom where user_id=#{userId} and custom_id=#{customId}")
     JoinCustom findJoinCustomByUserAndCustom(Integer userId, Integer customId);
