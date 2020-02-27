@@ -37,8 +37,11 @@ public interface CustomDao {
             "where id = #{id}")
     void updateJoinCustom(JoinCustom joinCustom);
 
-    @Delete("delete from custom where id=${customId}")
+    @Delete("delete from custom where id=#{customId}")
     void deleteCustom(Integer customId);
+
+    @Select("select * from custom where id = #{id}")
+    Custom findCustomById(Integer id);
 
     @Select("select * from join_custom where id = #{id}")
     JoinCustom findJoinCustomById(Integer id);

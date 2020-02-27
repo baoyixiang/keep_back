@@ -116,8 +116,8 @@ public class CustomService {
     }
 
     public ResponseEntity deleteCustom(Integer customId) {
-        if (customDao.findJoinCustomById(customId) == null) {
-            return ResponseEntity.badRequest().build();
+        if (customDao.findCustomById(customId) == null) {
+            throw new ParameterErrorException("习惯记录不存在");
         }
 
         try {
