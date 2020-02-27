@@ -4,7 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.keep.keep_backfront.VO.inVO.custom.*;
 import com.keep.keep_backfront.VO.outVO.custom.CustomDetailOutVO;
 import com.keep.keep_backfront.VO.outVO.custom.CustomListOutVO;
-import com.keep.keep_backfront.entity.Custom
+import com.keep.keep_backfront.entity.Custom;
 import com.keep.keep_backfront.service.CustomService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
