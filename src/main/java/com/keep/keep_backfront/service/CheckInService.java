@@ -4,25 +4,30 @@ import com.keep.keep_backfront.VO.inVO.checkin.CheckInCommentInOV;
 import com.keep.keep_backfront.VO.inVO.checkin.CheckInRequest;
 import com.keep.keep_backfront.VO.inVO.checkin.LikeCheckInOV;
 import com.keep.keep_backfront.VO.outVO.checkIn.CheckInDetail;
+import com.keep.keep_backfront.VO.outVO.checkIn.CheckInOutVO;
 import com.keep.keep_backfront.dao.CheckInDao;
 import com.keep.keep_backfront.dao.CustomDao;
+import com.keep.keep_backfront.dao.UserDao;
 import com.keep.keep_backfront.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Component
 public class CheckInService {
 
-    public CheckInDao checkInDao;
+    private CheckInDao checkInDao;
+    private UserDao userDao;
 
     @Autowired
-    public CheckInService(CheckInDao checkInDao) {
+    public CheckInService(CheckInDao checkInDao,UserDao userDao) {
         this.checkInDao = checkInDao;
+        this.userDao = userDao;
     }
 
     @Autowired
@@ -33,7 +38,7 @@ public class CheckInService {
      */
     public ResponseEntity insertCheckIn(CheckInRequest request){
         CheckIn checkIn = new CheckIn();
-        List<CheckIn> checkIns = checkInDao.getCheckInsByCustomeId(request.getCustomId(),request.getUserId());//获取用户对应习惯的所有打卡记录
+        List<CheckIn> checkIns = checkInDao.getCheckInsByCustomAndUser(request.getCustomId(),request.getUserId());//获取用户对应习惯的所有打卡记录
         checkIn.setUserId(request.getUserId());
         checkIn.setCustomeId(request.getCustomId());
         checkIn.setCheckInTime(new Date());
@@ -143,5 +148,32 @@ public class CheckInService {
         }
 
         return checkInDetail;
+    }
+
+    /**
+     * 后台获取习惯所有打卡记录
+     */
+    public List<CheckInOutVO> getCheckIns(Integer customId){
+        List<CheckInOutVO> checkInOutVOS = new ArrayList<CheckInOutVO>();
+
+        try{
+            List<CheckIn> checkIns = checkInDao.getCheckInByCustom(customId);
+            for (CheckIn checkIn:checkIns) {
+                CheckInOutVO checkInOutVO = new CheckInOutVO();
+                checkInOutVO.setCheckInId(checkIn.getId());//打卡id
+                checkInOutVO.setUserName(userDao.getUserById(checkIn.getUserId()).getName());//名字
+                checkInOutVO.setCheckInTime(checkIn.getCheckInTime());//打卡时间
+                checkInOutVO.setLikeCount(checkInDao.getLikeCountByCheckIn(checkIn.getId()));//打卡点赞数
+                checkInOutVO.setCommentCount(checkInDao.getCheckInCommentsByCheckInId(checkIn.getId()).size());//打卡评论数
+
+                checkInOutVOS.add(checkInOutVO);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("checkInOutVOS信息获取失败");
+        }
+
+        return checkInOutVOS;
     }
 }

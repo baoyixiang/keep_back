@@ -18,10 +18,17 @@ public interface CheckInDao {
     @Select("select * from check_in where user_id=#{userId} and custom_id=#{customId}")
     List<CheckIn> findCheckinByUserAndCustom(Integer userId, Integer customId);
 
+    @Select("select * from check_in where user_id=#{userId} ORDER BY check_in_time DESC")
+    List<CheckIn> getCheckInByUser(Integer userId);
+
+    @Select("select * from check_in where custome_id=#{customId} ORDER BY check_in_time DESC")
+    List<CheckIn> getCheckInByCustom(Integer customId);
+
+    //根据打卡id查询打卡
     @Select("select * from check_in where id=#{checkInId}")
     CheckIn getCheckInByCheckInId(Integer checkInId);
-
-    @Select("select * from check_in_comments where check_in_id=#{checkInId}")
+    //查询打卡的所有评论
+    @Select("select * from check_in_comments where check_in_id=#{checkInId} ORDER BY comment_time DESC")
     List<CheckInComments> getCheckInCommentsByCheckInId(Integer checkInId);
 
     //查询点赞打卡记录的所有用户
@@ -29,9 +36,9 @@ public interface CheckInDao {
             "(select user_id from user_like_check_in where check_in_id=#{checkInId})")
     List<User> getLikeUsersByCheckInId(Integer checkInId);
 
-    //查询习惯当前所有的打卡
-    @Select("select * from check_in WHERE custome_id=#{customeId} and user_id=#{userId}")
-    List<CheckIn> getCheckInsByCustomeId(Integer customeId,Integer userId);
+    //查询用户一个习惯所有的打卡
+    @Select("select * from check_in WHERE custome_id=#{customeId} and user_id=#{userId} ORDER BY check_in_time DESC")
+    List<CheckIn> getCheckInsByCustomAndUser(Integer customeId,Integer userId);
     //插入打卡记录
     @Insert("insert into check_in(user_id,custome_id,check_in_time,word_content,images,voice,days)" +
             "values(#{userId},#{customeId},#{checkInTime},#{wordContent}," +
@@ -51,5 +58,9 @@ public interface CheckInDao {
     @Insert("INSERT INTO user_like_check_in(user_id,check_in_id,like_time) " +
             "VALUES (#{userId},#{checkInId},#{likeTime})")
     Integer insertUserLikeCheckIn(UserLikeCheckIn userLikeCheckIn);
+
+    //查询一个打卡的点赞数
+    @Select("select count(*) from user_like_check_in where check_in_id=#{checkInId}")
+    Integer getLikeCountByCheckIn(Integer checkInId);
 
 }
