@@ -5,6 +5,7 @@ import com.keep.keep_backfront.VO.inVO.checkin.CheckInRequest;
 import com.keep.keep_backfront.VO.inVO.checkin.LikeCheckInOV;
 import com.keep.keep_backfront.VO.outVO.checkIn.CheckInDetail;
 import com.keep.keep_backfront.dao.CheckInDao;
+import com.keep.keep_backfront.dao.CustomDao;
 import com.keep.keep_backfront.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,9 @@ public class CheckInService {
         this.checkInDao = checkInDao;
     }
 
+    @Autowired
+    public CustomDao customDao;
+
     /**
      * 打卡
      */
@@ -37,7 +41,15 @@ public class CheckInService {
         checkIn.setImages(request.getImages());
         checkIn.setVoice(request.getVoice());
         checkIn.setDays(checkIns.size()+1);//设置当前打卡的天数
+
+        // 更新join custom表
+        JoinCustom joinCustom = customDao.findJoinCustomByUserAndCustom(request.getUserId(), request.getCustomId());
+        joinCustom.setCheckDaysCount(checkIns.size()+1);
+        if (joinCustom.getTargetDays() <= joinCustom.getCheckDaysCount())
+            joinCustom.setCompleted(true);
+
         try {
+            customDao.updateJoinCustom(joinCustom);
             int effectedNum = checkInDao.insertCheckIn(checkIn);
             if (effectedNum == 1) {
                 return ResponseEntity.status(HttpStatus.OK).build();
