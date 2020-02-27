@@ -130,8 +130,9 @@ public class UserService {
                 allUsersListOutVO.setUser(user);
                 allUsersListOutVO.setFollowedCount(userDao.followsOfMe(user.getId()).size());//被关注数
                 allUsersListOutVO.setFollowingCount(userDao.followingUser(user.getId()).size());//关注数
-                System.out.println(allUsersListOutVO.toString());
-                allUsersListOutVOS.add(allUsersListOutVO);//加入返回的list
+                allUsersListOutVO.setCustomesCount(userDao.getCustomsCountOfUser(user.getId()));//用户习惯总数
+                allUsersListOutVO.setHopesCount(userDao.getHopesCountOfUser(user.getId()));//用户心愿总数
+                allUsersListOutVOS.add(allUsersListOutVO);//加入userlist
             }
         }catch (Exception e){
             e.printStackTrace();

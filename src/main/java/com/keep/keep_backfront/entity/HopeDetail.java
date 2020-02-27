@@ -9,10 +9,12 @@ import java.util.List;
 
 @Data
 public class HopeDetail implements Serializable {
-    private String wordContent;
+//    private String wordContent;
     private List<HopeComment> Hopecomments;  //一条心愿可以包含多条评论
-    private JSONArray images = new JSONArray();
-    private Integer likeCount;
-    private Integer CommentCount;
-    private Integer hopeId;
+    private Hope hope;
+    private boolean isLiked = false;
+//    private JSONArray images = new JSONArray();
+//    private Integer likeCount;
+//    private Integer CommentCount;
+//    private Integer hopeId;
 }

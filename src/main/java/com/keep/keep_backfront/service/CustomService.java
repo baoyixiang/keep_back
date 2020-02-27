@@ -6,8 +6,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.keep.keep_backfront.VO.inVO.custom.*;
 import com.keep.keep_backfront.VO.outVO.custom.CustomDetailOutVO;
+<<<<<<< HEAD
 import com.keep.keep_backfront.VO.outVO.custom.CustomListOutVO;
 import com.keep.keep_backfront.VO.outVO.custom.RecommendCustomOutVO;
+=======
+>>>>>>> 0f457b681738fbe5d3445d6272406766d76c6213
 import com.keep.keep_backfront.dao.CheckInDao;
 import com.keep.keep_backfront.dao.CustomDao;
 import com.keep.keep_backfront.entity.Custom;
@@ -139,6 +142,7 @@ public class CustomService {
         joinCustom.setArchive(false);
 
         try {
+            System.out.println("customId:" + inVO.getCustomId());
             customDao.joinCustom(joinCustom);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception ex) {
@@ -182,15 +186,8 @@ public class CustomService {
     }
 
     //获取推荐习惯类型的列表
-    public List<RecommendCustomOutVO> getRecommendCustomList(RecommendListInVO request) {
-        List<RecommendCustomOutVO> recommendCustomList = new ArrayList<>();
-        List<String> tagsList = request.getTagsList();
-        for(String str : tagsList) {
-            RecommendCustomOutVO recommendCustomOutVO = new RecommendCustomOutVO();
-            recommendCustomOutVO.title = str;
-            recommendCustomOutVO.customList = customDao.findRecommendCustomByTag(str);
-            recommendCustomList.add(recommendCustomOutVO);
-        }
+    public List<Custom> getRecommendCustomList(RecommendListInVO request) {
+        List<Custom> recommendCustomList = customDao.findRecommendCustomByTag(request.getTag());
         return recommendCustomList;
     }
 }

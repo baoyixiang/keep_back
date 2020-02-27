@@ -7,6 +7,7 @@ import com.keep.keep_backfront.entity.Hope;
 import com.keep.keep_backfront.entity.HopeComment;
 import com.keep.keep_backfront.entity.HopeDetail;
 import com.keep.keep_backfront.entity.UserLikeHope;
+import com.keep.keep_backfront.handler.ArrayJsonHandler;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Component;
@@ -44,6 +45,9 @@ public interface HopeDao {
 
     //根据心愿id获取心愿
     @Select("select * from hope where id=#{hopeId}")
+    @Results({//查询时json映射
+            @Result(column = "images", property = "images", typeHandler = ArrayJsonHandler.class)
+    })
     Hope getHopeByHopeId(Integer hopeId);
 
     //根据userId返回该用户所有树洞心愿
@@ -55,7 +59,9 @@ public interface HopeDao {
     @Select("select * from hope order by rand() limit 1")
     Hope oneRandHope();
 
-
+    //查询心愿点赞记录
+    @Select("select * from user_like_hope where hope_id=#{hopeId}")
+    List<UserLikeHope> getUserLikeHopeByHopeId(Integer hopeId);
 
     //插入一条心愿评论
     @Insert("insert into hope_comments(user_id,hope_id,comment_time,comment_content,reply_to)" +
