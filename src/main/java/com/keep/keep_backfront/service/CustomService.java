@@ -6,11 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.keep.keep_backfront.VO.inVO.custom.*;
 import com.keep.keep_backfront.VO.outVO.custom.CustomDetailOutVO;
-<<<<<<< HEAD
 import com.keep.keep_backfront.VO.outVO.custom.CustomListOutVO;
-import com.keep.keep_backfront.VO.outVO.custom.RecommendCustomOutVO;
-=======
->>>>>>> 0f457b681738fbe5d3445d6272406766d76c6213
 import com.keep.keep_backfront.dao.CheckInDao;
 import com.keep.keep_backfront.dao.CustomDao;
 import com.keep.keep_backfront.entity.Custom;
