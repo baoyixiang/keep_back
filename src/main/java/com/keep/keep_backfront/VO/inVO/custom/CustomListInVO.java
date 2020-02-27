@@ -6,6 +6,7 @@ import lombok.Data;
 public class CustomListInVO {
     private Integer userId;
     private String title;
+    private Boolean isDefault;
     private Integer pageNo;
     private Integer pageSize;
 }

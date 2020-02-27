@@ -13,7 +13,7 @@ public class Custom implements Serializable {
   private String logo="";
   private Integer createUserId=-1;
   private Date createTime=new Date();
-  private JSONArray tags=new JSONArray();
+  private JSONArray tags;
   private Boolean isDefault=false;
 
   public Integer getId() {

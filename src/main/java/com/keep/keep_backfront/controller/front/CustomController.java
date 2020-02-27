@@ -30,7 +30,7 @@ public class CustomController {
     @PostMapping("insert_custom")
     public ResponseEntity insertCustom(@RequestBody AddCustomInVO request) {
         request.checkParam();
-        return customService.insertCustom(request.getTitle(), request.getUserId());
+        return customService.userInsert(request);
     }
 
     @ApiOperation("获取习惯列表")

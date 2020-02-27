@@ -1,11 +1,10 @@
 package com.keep.keep_backfront.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.keep.keep_backfront.VO.inVO.custom.CustomListInVO;
-import com.keep.keep_backfront.VO.inVO.custom.JoinCustomInVO;
-import com.keep.keep_backfront.VO.inVO.custom.RecommendListInVO;
-import com.keep.keep_backfront.VO.inVO.custom.UserCustomInVO;
+import com.keep.keep_backfront.VO.inVO.custom.*;
 import com.keep.keep_backfront.VO.outVO.custom.CustomDetailOutVO;
 import com.keep.keep_backfront.VO.outVO.custom.RecommendCustomOutVO;
 import com.keep.keep_backfront.dao.CheckInDao;
@@ -35,19 +34,25 @@ public class CustomService {
     @Autowired
     private CheckInDao checkInDao;
 
+    public ResponseEntity userInsert(AddCustomInVO request) {
+        return insertCustom(request, false);
+    }
+
+    public ResponseEntity adminInsert(AddCustomInVO request) {
+        return insertCustom(request, true);
+    }
+
     /**
      * 插入一条习惯信息
      */
-    public ResponseEntity insertCustom(String title, Integer userId) {
-        if (title == null) {
-            throw new ParameterErrorException("习惯标题不能为空");
-        }
-
+    public ResponseEntity insertCustom(AddCustomInVO request, Boolean isDefault) {
         Custom custom = new Custom();
-        custom.setTitle(title);
-        custom.setDefault(false);
+        custom.setTitle(request.getTitle());
+        custom.setDefault(isDefault);
         custom.setCreateTime(new Date());
-        custom.setCreateUserId(userId);
+        custom.setCreateUserId(request.getUserId());
+        custom.setLogo(request.getLogo());
+        custom.setTags(JSONArray.parseArray(JSON.toJSONString(request.getTags())));
         try {
             int effectedNum = customDao.insertCustom(custom);
             if (effectedNum == 1) {
@@ -67,7 +72,7 @@ public class CustomService {
     public PageInfo<Custom> getCustomList(CustomListInVO inVO) {
         PageHelper.startPage(inVO.getPageNo(), inVO.getPageSize());
         try {
-            List<Custom> list = customDao.customList(inVO.getUserId(), inVO.getTitle());
+            List<Custom> list = customDao.customList(inVO.getUserId(), inVO.getTitle(), inVO.getIsDefault());
             return new PageInfo<>(list);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -104,6 +109,20 @@ public class CustomService {
         try {
             customDao.updateJoinCustom(joinCustom);
             return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    public ResponseEntity deleteCustom(Integer customId) {
+        if (customDao.findJoinCustomById(customId) == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        try {
+            customDao.deleteCustom(customId);
+            return ResponseEntity.ok().build();
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
