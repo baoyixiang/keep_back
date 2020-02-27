@@ -38,13 +38,6 @@ public class UserController {
         return userService.login(userLoginVO);
     }
 
-//    @ApiOperation("用户主页")
-//    @PostMapping("userHome")
-    public UserHomeOutVO getUserHome(@RequestBody String str){
-        Integer userId = Integer.parseInt(JSON.parseObject(str).get("userId").toString());
-        return userService.userHome(userId);
-    }
-
     @ApiOperation("关注用户")
     @PostMapping("follow")
     public ResponseEntity userFollow(@RequestBody UserFollowInVO userFollowInVO){
@@ -60,17 +53,15 @@ public class UserController {
     }
 
     @ApiOperation("我的关注")
-    @PostMapping("following")
-    List<User> followingList(@RequestBody String str){
-        Integer myId = Integer.parseInt(JSON.parseObject(str).get("myId").toString());
-        return userDao.followingUser(myId);
+    @GetMapping("following/{userId}")
+    List<User> followingList(@PathVariable Integer userId){
+        return userDao.followingUser(userId);
     }
 
     @ApiOperation("我的粉丝")
-    @PostMapping("fans")
-    List<User> fansList(@RequestBody String str){
-        Integer myId = Integer.parseInt(JSON.parseObject(str).get("myId").toString());
-        return userDao.followsOfMe(myId);
+    @GetMapping("fans/{userId}")
+    List<User> fansList(@PathVariable Integer userId){
+        return userDao.followsOfMe(userId);
     };
 
     //获取用户推荐列表（待完成）

@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -192,17 +193,29 @@ public class HopeService {
     /**
      * 获取详细心愿hope_detail
      */
-    public HopeDetail hopeDetail(Integer hopeId){
+    public HopeDetail hopeDetail(HopeDetailInVO request){
         HopeDetail hopeDetail = new HopeDetail();
+        List<UserLikeHope> userLikeHopeList = new ArrayList<UserLikeHope>();
+        Integer hopeId = request.getHopeId();
         try{
             Hope hope = hopeDao.getHopeByHopeId(hopeId);
 
-            hopeDetail.setWordContent(hope.getWordContent());
-            hopeDetail.setLikeCount(hope.getLikeCount());
-            hopeDetail.setCommentCount(hope.getCommentCount());
-            hopeDetail.setHopeId(hope.getId());
+//            System.out.println(hope.getImages());
+            hopeDetail.setHope(hope);
             hopeDetail.setHopecomments(hopeDao.hopeComments(hopeId));
-            hopeDetail.setImages(hope.getImages());
+            userLikeHopeList = hopeDao.getUserLikeHopeByHopeId(hopeId);
+            for (UserLikeHope userlikehope:userLikeHopeList) {//遍历hope点赞记录，查询当前用户是否点赞该hope
+                if(userlikehope.getUserId()==request.getUserId()){
+                    hopeDetail.setLiked(true);
+                }
+            }
+
+//            hopeDetail.setWordContent(hope.getWordContent());
+//            hopeDetail.setLikeCount(hope.getLikeCount());
+//            hopeDetail.setCommentCount(hope.getCommentCount());
+//            hopeDetail.setHopeId(hope.getId());
+//            hopeDetail.setImages(hope.getImages());
+
         }catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException("hopeDetail信息获取失败");

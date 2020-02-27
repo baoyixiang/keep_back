@@ -63,4 +63,11 @@ public interface UserDao {
     //将用户设置为推荐用户
     @Update("UPDATE `user` SET is_recommended=ABS(1-is_recommended) WHERE id=#{userId}")
     Integer setRecommended(Integer userId);
+
+    //查询用户所有习惯数
+    @Select("select count(*) from custom where create_user_id=#{userId}")
+    Integer getCustomsCountOfUser(Integer userId);
+    //查询用户所有心愿数
+    @Select("select count(*) from hope where create_user_id=#{userId}")
+    Integer getHopesCountOfUser(Integer userId);
 }

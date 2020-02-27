@@ -80,9 +80,8 @@ public class HopeController {
 
     @ApiOperation("获取心愿详情hopeDetail")
     @PostMapping("hopeDetail")
-    public HopeDetail getHopeDetail(@RequestBody String str){
-        Integer hopeId = Integer.parseInt(JSON.parseObject(str).get("hopeId").toString());
-        return hopeService.hopeDetail(hopeId);
+    public HopeDetail getHopeDetail(@RequestBody HopeDetailInVO request){
+        return hopeService.hopeDetail(request);
     }
 
 }
