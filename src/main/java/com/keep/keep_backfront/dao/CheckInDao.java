@@ -4,10 +4,9 @@ import com.keep.keep_backfront.entity.CheckIn;
 import com.keep.keep_backfront.entity.CheckInComments;
 import com.keep.keep_backfront.entity.User;
 import com.keep.keep_backfront.entity.UserLikeCheckIn;
+import com.keep.keep_backfront.handler.ArrayJsonHandler;
 import io.swagger.models.auth.In;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,16 +15,23 @@ import java.util.List;
 public interface CheckInDao {
 
     @Select("select * from check_in where user_id=#{userId} and custome_id=#{customId}")
+    @Results(id = "checkInMap", value = {
+            @Result(column = "images", property = "images", typeHandler = ArrayJsonHandler.class)
+    })
     List<CheckIn> findCheckinByUserAndCustom(Integer userId, Integer customId);
 
+
     @Select("select * from check_in where user_id=#{userId} ORDER BY check_in_time DESC")
+    @ResultMap("checkInMap")
     List<CheckIn> getCheckInByUser(Integer userId);
 
     @Select("select * from check_in where custome_id=#{customId} ORDER BY check_in_time DESC")
+    @ResultMap("checkInMap")
     List<CheckIn> getCheckInByCustom(Integer customId);
 
     //根据打卡id查询打卡
     @Select("select * from check_in where id=#{checkInId}")
+    @ResultMap("checkInMap")
     CheckIn getCheckInByCheckInId(Integer checkInId);
     //查询打卡的所有评论
     @Select("select * from check_in_comments where check_in_id=#{checkInId} ORDER BY comment_time DESC")
@@ -38,6 +44,7 @@ public interface CheckInDao {
 
     //查询用户一个习惯所有的打卡
     @Select("select * from check_in WHERE custome_id=#{customeId} and user_id=#{userId} ORDER BY check_in_time DESC")
+    @ResultMap("checkInMap")
     List<CheckIn> getCheckInsByCustomAndUser(Integer customeId,Integer userId);
     //插入打卡记录
     @Insert("insert into check_in(user_id,custome_id,check_in_time,word_content,images,voice,days)" +
@@ -62,5 +69,9 @@ public interface CheckInDao {
     //查询一个打卡的点赞数
     @Select("select count(*) from user_like_check_in where check_in_id=#{checkInId}")
     Integer getLikeCountByCheckIn(Integer checkInId);
+
+    //查询习惯当日打卡总数
+    @Select("select count(*) from check_in where date(check_in_time) = curdate() and custome_id=#{customId}")
+    Integer getTodayCheckInByCustom(Integer customId);
 
 }

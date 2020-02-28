@@ -78,4 +78,7 @@ public interface CustomDao {
         }
     }
 
+    @Select("select join_count from custom where id=#{customId}")
+    Integer getJoinCountByCustom(Integer customId);
+
 }

@@ -10,7 +10,7 @@ public class CheckInRequest {
     private Integer userId;
     private Integer customId;
     private String wordContent;
-    private JSONArray images;
+    private List<String> images;
     private String voice;
 
     @Override

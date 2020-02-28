@@ -1,5 +1,7 @@
 package com.keep.keep_backfront.controller.back;
 
+import com.keep.keep_backfront.VO.inVO.checkin.CheckInsInVO;
+import com.keep.keep_backfront.VO.outVO.checkIn.AllCheckInOutVO;
 import com.keep.keep_backfront.VO.outVO.checkIn.CheckInOutVO;
 import com.keep.keep_backfront.service.CheckInService;
 import io.swagger.annotations.Api;
@@ -23,8 +25,8 @@ public class CheckInBackController {
     }
 
     @ApiOperation("习惯所有打卡记录")
-    @GetMapping("checkInList/{customId}")
-    public List<CheckInOutVO> getCheckInListByCustom(@PathVariable Integer customId){
-        return checkInService.getCheckIns(customId);
+    @PostMapping("checkInList")
+    public AllCheckInOutVO getCheckInListByCustom(@RequestBody CheckInsInVO checkInsInVO){
+        return checkInService.getCheckIns(checkInsInVO);
     }
 }

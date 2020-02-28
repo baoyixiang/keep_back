@@ -1,8 +1,13 @@
 package com.keep.keep_backfront.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.github.pagehelper.PageHelper;
+import com.keep.keep_backfront.VO.inVO.checkin.CheckInsInVO;
 import com.keep.keep_backfront.VO.inVO.checkin.CheckInCommentInOV;
 import com.keep.keep_backfront.VO.inVO.checkin.CheckInRequest;
 import com.keep.keep_backfront.VO.inVO.checkin.LikeCheckInOV;
+import com.keep.keep_backfront.VO.outVO.checkIn.AllCheckInOutVO;
 import com.keep.keep_backfront.VO.outVO.checkIn.CheckInDetail;
 import com.keep.keep_backfront.VO.outVO.checkIn.CheckInOutVO;
 import com.keep.keep_backfront.dao.CheckInDao;
@@ -37,13 +42,14 @@ public class CheckInService {
      * 打卡
      */
     public ResponseEntity insertCheckIn(CheckInRequest request){
+
         CheckIn checkIn = new CheckIn();
         List<CheckIn> checkIns = checkInDao.getCheckInsByCustomAndUser(request.getCustomId(),request.getUserId());//获取用户对应习惯的所有打卡记录
         checkIn.setUserId(request.getUserId());
         checkIn.setCustomeId(request.getCustomId());
         checkIn.setCheckInTime(new Date());
         checkIn.setWordContent(request.getWordContent());
-        checkIn.setImages(request.getImages());
+        checkIn.setImages(JSONArray.parseArray(JSON.toJSONString(request.getImages())));
         checkIn.setVoice(request.getVoice());
         checkIn.setDays(checkIns.size()+1);//设置当前打卡的天数
 
@@ -153,27 +159,36 @@ public class CheckInService {
     /**
      * 后台获取习惯所有打卡记录
      */
-    public List<CheckInOutVO> getCheckIns(Integer customId){
+    public AllCheckInOutVO getCheckIns(CheckInsInVO checkInsInVO){
+
+        PageHelper.startPage(checkInsInVO.getPageNo(), checkInsInVO.getPageSize());
+
+        AllCheckInOutVO allCheckInOutVO = new AllCheckInOutVO();
         List<CheckInOutVO> checkInOutVOS = new ArrayList<CheckInOutVO>();
 
         try{
-            List<CheckIn> checkIns = checkInDao.getCheckInByCustom(customId);
+            List<CheckIn> checkIns = checkInDao.getCheckInByCustom(checkInsInVO.getCustomId());
             for (CheckIn checkIn:checkIns) {
                 CheckInOutVO checkInOutVO = new CheckInOutVO();
                 checkInOutVO.setCheckInId(checkIn.getId());//打卡id
                 checkInOutVO.setUserName(userDao.getUserById(checkIn.getUserId()).getName());//名字
                 checkInOutVO.setCheckInTime(checkIn.getCheckInTime());//打卡时间
+                checkInOutVO.setWordContent(checkIn.getWordContent());//打卡内容
                 checkInOutVO.setLikeCount(checkInDao.getLikeCountByCheckIn(checkIn.getId()));//打卡点赞数
                 checkInOutVO.setCommentCount(checkInDao.getCheckInCommentsByCheckInId(checkIn.getId()).size());//打卡评论数
 
                 checkInOutVOS.add(checkInOutVO);
             }
 
+            allCheckInOutVO.setCheckInOutVOS(checkInOutVOS);//打卡的信息
+            allCheckInOutVO.setCheckInToday(checkInDao.getTodayCheckInByCustom(checkInsInVO.getCustomId()));//习惯今日打卡数
+            allCheckInOutVO.setJoinCount(customDao.getJoinCountByCustom(checkInsInVO.getCustomId()));//习惯总打卡数
+
         }catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException("checkInOutVOS信息获取失败");
         }
 
-        return checkInOutVOS;
+        return allCheckInOutVO;
     }
 }

@@ -13,4 +13,5 @@ public class CheckInOutVO {
     private Integer commentCount;
     private Integer likeCount;
     private Date checkInTime;
+    private String wordContent;
 }
