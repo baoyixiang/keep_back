@@ -15,9 +15,9 @@ import java.util.List;
 @Component
 public interface CustomDao {
 
-    @Insert("insert into custom(title, logo, create_user_id, create_time, tags, is_default)" +
+    @Insert("insert into custom(title, logo, create_user_id, create_time, tags, is_default, join_count)" +
             "values(#{title}, #{logo}, #{createUserId}, #{createTime}, " +
-            "#{tags, typeHandler=com.keep.keep_backfront.handler.ArrayJsonHandler}, #{isDefault})")
+            "#{tags, typeHandler=com.keep.keep_backfront.handler.ArrayJsonHandler}, #{isDefault}, #{joinCount})")
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
     Integer insertCustom(Custom custom);
 
@@ -26,6 +26,11 @@ public interface CustomDao {
             @Result(column = "tags", property = "tags", typeHandler = ArrayJsonHandler.class)
     })
     List<Custom> customList(Integer userId, String title, Boolean isDefault);
+
+    @Update("update custom set title=#{title}, logo=#{logo}, create_user_id=#{createUserId}, " +
+            "create_time=#{createTime}, tags=#{tags, typeHandler=com.keep.keep_backfront.handler.ArrayJsonHandler}, " +
+            "is_default=#{isDefault}, join_count=#{joinCount}")
+    void updateCustom(Custom custom);
 
     @Insert("insert into join_custom(user_id,custom_id,join_time,is_public,target_days,is_completed,beans_count,check_days_count,is_archive)" +
             "values(#{userId},#{customId},#{joinTime},#{isPublic},#{targetDays},#{isCompleted},#{beadsCount}," +

@@ -15,6 +15,15 @@ public class Custom implements Serializable {
   private Date createTime=new Date();
   private JSONArray tags;
   private Boolean isDefault=false;
+  private Integer joinCount;
+
+  public Integer getJoinCount() {
+    return joinCount;
+  }
+
+  public void setJoinCount(Integer joinCount) {
+    this.joinCount = joinCount;
+  }
 
   public Integer getId() {
     return id;

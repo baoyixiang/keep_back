@@ -1,0 +1,1 @@
+ALTER TABLE custom ADD join_count int;

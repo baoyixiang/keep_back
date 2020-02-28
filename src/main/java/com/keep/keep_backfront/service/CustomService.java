@@ -53,6 +53,7 @@ public class CustomService {
         custom.setCreateUserId(request.getUserId());
         custom.setLogo(request.getLogo());
         custom.setTags(JSONArray.parseArray(JSON.toJSONString(request.getTags())));
+        custom.setJoinCount(1);
         try {
             int effectedNum = customDao.insertCustom(custom);
             if (effectedNum == 1) {
@@ -137,8 +138,10 @@ public class CustomService {
         joinCustom.setCheckDaysCount(0);
         joinCustom.setArchive(false);
 
+        Custom custom = customDao.findCustomById(joinCustom.getCustomId());
+        custom.setJoinCount(custom.getJoinCount()+1);
         try {
-            System.out.println("customId:" + inVO.getCustomId());
+            customDao.updateCustom(custom);
             customDao.joinCustom(joinCustom);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception ex) {
@@ -147,7 +150,7 @@ public class CustomService {
         }
     }
 
-    public ResponseEntity updateCustom(JoinCustomInVO inVO) {
+    public ResponseEntity updateJoinCustom(JoinCustomInVO inVO) {
         JoinCustom joinCustom = customDao.findJoinCustomById(inVO.getId());
         BeanUtils.copyProperties(inVO, joinCustom);
         try {
