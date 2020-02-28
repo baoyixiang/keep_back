@@ -6,14 +6,14 @@ import lombok.Data;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class PublishHopeInVO {
     private String wordContent;
-    private JSONArray images = new JSONArray();
+    private List<String> images;
     private String voice;
     private Integer createUserId;
-    private Date createTime;
     private Boolean isAnonymous;
     private Boolean isSeeSelf;
 

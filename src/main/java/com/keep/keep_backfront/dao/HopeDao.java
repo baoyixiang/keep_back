@@ -41,22 +41,25 @@ public interface HopeDao {
 //            @Result(column = "name",property = "name",jdbcType = JdbcType.VARCHAR),
 //            @Result(column = "avatar",property = "avatar",jdbcType = JdbcType.VARCHAR)
 //    })
+    @Results(id = "hopeMap", value = {
+            @Result(column = "images", property = "images", typeHandler = ArrayJsonHandler.class)
+    })
     List<HopeListOutVO> allHopesList();
 
     //根据心愿id获取心愿
     @Select("select * from hope where id=#{hopeId}")
-    @Results({//查询时json映射
-            @Result(column = "images", property = "images", typeHandler = ArrayJsonHandler.class)
-    })
+    @ResultMap("hopeMap")
     Hope getHopeByHopeId(Integer hopeId);
 
     //根据userId返回该用户所有树洞心愿
     @Select("select * from hope " +
             "where create_user_id=#{userId}")
+    @ResultMap("hopeMap")
     List<Hope>HopeListByUser(Integer userId);
 
     //随机返回一条树洞心愿
     @Select("select * from hope order by rand() limit 1")
+    @ResultMap("hopeMap")
     Hope oneRandHope();
 
     //查询心愿点赞记录

@@ -1,5 +1,7 @@
 package com.keep.keep_backfront.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.keep.keep_backfront.VO.inVO.hope.*;
 import com.keep.keep_backfront.VO.outVO.hope.HopeListOutVO;
@@ -35,10 +37,10 @@ public class HopeService {
         Hope hope = new Hope();
         hope.setWordContent(request.getWordContent());
         hope.setCreateUserId(request.getCreateUserId());
-        hope.setCreateTime(request.getCreateTime());
+        hope.setCreateTime(new Date());
         hope.setAnonymous(request.getIsAnonymous());
         hope.setSeeSelf(request.getIsSeeSelf());
-        hope.setImages(request.getImages());    //存入images
+        hope.setImages(JSONArray.parseArray(JSON.toJSONString(request.getImages())));    //存入images
         hope.setLikeCount(0);
         hope.setCommentCount(0);
 
