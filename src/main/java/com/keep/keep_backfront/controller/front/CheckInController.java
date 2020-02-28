@@ -5,7 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.keep.keep_backfront.VO.inVO.checkin.CheckInCommentInOV;
 import com.keep.keep_backfront.VO.inVO.checkin.CheckInRequest;
 import com.keep.keep_backfront.VO.inVO.checkin.LikeCheckInOV;
+import com.keep.keep_backfront.VO.inVO.custom.UserCustomInVO;
 import com.keep.keep_backfront.VO.outVO.checkIn.CheckInDetail;
+import com.keep.keep_backfront.dao.CheckInDao;
+import com.keep.keep_backfront.entity.CheckIn;
 import com.keep.keep_backfront.service.CheckInService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin
 @Api("小程序端打卡模块api")
 @RestController
@@ -21,10 +26,12 @@ import org.springframework.web.bind.annotation.*;
 public class CheckInController {
 
     public CheckInService checkInService;
+    public CheckInDao checkInDao;
 
     @Autowired
-    public CheckInController(CheckInService checkInService) {
+    public CheckInController(CheckInService checkInService,CheckInDao checkInDao) {
         this.checkInService = checkInService;
+        this.checkInDao = checkInDao;
     }
 
     @ApiOperation("打卡")
@@ -55,5 +62,17 @@ public class CheckInController {
     public CheckInDetail getCheckInDetail(@PathVariable Integer checkInId){
         return checkInService.getCheckInDetailById(checkInId);
     }
+
+    @ApiOperation("我的打卡记录")
+    @GetMapping("myCheckInList/{userId}")
+    public List<CheckIn> getMyCheckInList(@PathVariable Integer userId){
+        return checkInDao.getCheckInByUser(userId);
+    }
+
+    @ApiOperation("习惯的打卡记录")
+    @PostMapping("CustomCheckIns")
+    public List<CheckIn> getCustomCheckInList(@RequestBody UserCustomInVO userCustomInVO){
+        return checkInDao.getCheckInsByCustomAndUser(userCustomInVO.getCustomId(),userCustomInVO.getUserId());
+    };
 
 }

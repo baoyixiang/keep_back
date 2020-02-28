@@ -62,6 +62,9 @@ public interface CustomDao {
     @ResultMap("customMap")
     List<Custom> findRecommendCustomByTag(String tagId);
 
+    @Select("SELECT DISTINCT custom_id FROM join_custom WHERE user_id=#{userId}")
+    List<Integer> findAddedCustomById(Integer userId);
+
     // 根据条件构建动态sql
     class CustomDaoProvider {
         public String customList(Integer userId, String title, Boolean isDefault) {
