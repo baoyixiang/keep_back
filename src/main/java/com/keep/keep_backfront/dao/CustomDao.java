@@ -33,7 +33,7 @@ public interface CustomDao {
     void updateCustom(Custom custom);
 
     @Insert("insert into join_custom(user_id,custom_id,join_time,is_public,target_days,is_completed,beans_count,check_days_count,is_archive)" +
-            "values(#{userId},#{customId},#{joinTime},#{isPublic},#{targetDays},#{isCompleted},#{beadsCount}," +
+            "values(#{userId},#{customId},#{joinTime},#{isPublic},#{targetDays},#{isCompleted},#{beansCount}," +
             "#{checkDaysCount},#{isArchive})")
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
     Integer joinCustom(JoinCustom joinCustom);
@@ -52,13 +52,13 @@ public interface CustomDao {
     @Select("select * from join_custom where id = #{id}")
     JoinCustom findJoinCustomById(Integer id);
 
-    @Select("select * from join_custom where user_id=#{userId}")
+    @Select("select distinct * from join_custom where user_id=#{userId}")
     List<JoinCustom> findJoinCustomsByUserId(Integer userId);
 
     @Select("select * from join_custom where user_id=#{userId} and custom_id=#{customId}")
     JoinCustom findJoinCustomByUserAndCustom(Integer userId, Integer customId);
 
-    @Select("select * from custom where is_default = 1 and json_contains(tags,'[\"${tagId}\"]')")
+    @Select("select distinct * from custom where is_default = 1 and json_contains(tags,'[\"${tagId}\"]')")
     @ResultMap("customMap")
     List<Custom> findRecommendCustomByTag(String tagId);
 
