@@ -15,7 +15,7 @@ import java.util.List;
 @Component
 public interface CheckInDao {
 
-    @Select("select * from check_in where user_id=#{userId} and custom_id=#{customeId}")
+    @Select("select * from check_in where user_id=#{userId} and custome_id=#{customId}")
     List<CheckIn> findCheckinByUserAndCustom(Integer userId, Integer customId);
 
     @Select("select * from check_in where user_id=#{userId} ORDER BY check_in_time DESC")
