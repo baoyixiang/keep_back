@@ -187,7 +187,12 @@ public class CustomService {
     //获取推荐习惯类型的列表
     public List<Custom> getRecommendCustomList(RecommendListInVO request) {
         List<Integer> customList = customDao.findAddedCustomById(request.getUserId());
-        List<Custom> recommendCustomList = customDao.findRecommendCustomByTag(request.getTag());
+        List<Custom> recommendCustomList;
+        if(request.getTag() == null) {
+            recommendCustomList = customDao.findAllRecommendCustom();
+        }else {
+            recommendCustomList = customDao.findRecommendCustomByTag(request.getTag());
+        }
         for(int i = 0; i < recommendCustomList.size(); i++) {
             if(customList.contains(recommendCustomList.get(i).getId())) {
                 recommendCustomList.remove(recommendCustomList.get(i));

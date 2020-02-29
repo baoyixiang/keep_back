@@ -62,6 +62,9 @@ public interface CustomDao {
     @ResultMap("customMap")
     List<Custom> findRecommendCustomByTag(String tagId);
 
+    @Select("select distinct * from custom where is_default = 1")
+    List<Custom> findAllRecommendCustom();
+
     @Select("SELECT DISTINCT custom_id FROM join_custom WHERE user_id=#{userId}")
     List<Integer> findAddedCustomById(Integer userId);
 
