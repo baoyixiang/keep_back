@@ -63,7 +63,7 @@ public class CustomService {
                     joinCustom.setCheckDaysCount(0);
                     joinCustom.setBeansCount(0);
                     joinCustom.setCompleted(false);
-                    joinCustom.setTargetDays(0);
+                    joinCustom.setTargetDays(30);
                     joinCustom.setPublic(true);
                     joinCustom.setJoinTime(new Date());
                     joinCustom.setCustomId(custom.getId());
@@ -127,12 +127,19 @@ public class CustomService {
      * 用户加入一个习惯
      */
     public ResponseEntity joinCustom(JoinCustomInVO inVO) {
+        int targetDay;
+        if(inVO.getTargetDay()!=null){
+            targetDay = inVO.getTargetDay();
+        }else{
+            targetDay = 30;
+        }
+
         JoinCustom joinCustom = new JoinCustom();
         joinCustom.setUserId(inVO.getUserId());
         joinCustom.setCustomId(inVO.getCustomId());
         joinCustom.setJoinTime(new Date());
         joinCustom.setPublic(inVO.getIsPublic());
-        joinCustom.setTargetDays(inVO.getTargetDay());
+        joinCustom.setTargetDays(targetDay);
         joinCustom.setCompleted(false);
         joinCustom.setBeansCount(inVO.getBeansCount());
         joinCustom.setCheckDaysCount(0);
