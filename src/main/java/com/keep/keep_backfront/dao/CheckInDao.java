@@ -1,5 +1,6 @@
 package com.keep.keep_backfront.dao;
 
+import com.keep.keep_backfront.VO.inVO.checkin.CheckInRecord;
 import com.keep.keep_backfront.entity.CheckIn;
 import com.keep.keep_backfront.entity.CheckInComments;
 import com.keep.keep_backfront.entity.User;
@@ -46,15 +47,19 @@ public interface CheckInDao {
     @Select("select * from check_in WHERE custome_id=#{customeId} and user_id=#{userId} ORDER BY check_in_time DESC")
     @ResultMap("checkInMap")
     List<CheckIn> getCheckInsByCustomAndUser(Integer customeId,Integer userId);
-    //插入打卡记录
-    @Insert("insert into check_in(user_id,custome_id,check_in_time,word_content,images,voice,days)" +
-            "values(#{userId},#{customeId},#{checkInTime},#{wordContent}," +
-            "#{images, typeHandler=com.keep.keep_backfront.handler.ArrayJsonHandler}," +
-            "#{voice},#{days})")
+    //打卡
+    @Insert("insert into check_in(user_id,custome_id,check_in_time,days)" +
+            "values(#{userId},#{customeId},#{checkInTime},#{days})")
     Integer insertCheckIn(CheckIn checkIn);
-    //删除打卡记录
+    //取消打卡
     @Delete("DELETE FROM check_in WHERE id=#{checkInId}")
     Integer deleteCheckIn(Integer checkInId);
+    //打卡record
+    @Update("update check_in set word_content=#{wordContent}," +
+            "images=#{images, typeHandler=com.keep.keep_backfront.handler.ArrayJsonHandler}," +
+            "voice=#{voice} " +
+            "where id=#{id}")
+    Integer updateCheckIn(CheckIn checkIn);
 
     //插入打卡记录评论
     @Insert("insert into check_in_comments(user_id,check_in_id,comment_time,comment_content,reply_to)\n" +
@@ -73,5 +78,12 @@ public interface CheckInDao {
     //查询习惯当日打卡总数
     @Select("select count(*) from check_in where date(check_in_time) = curdate() and custome_id=#{customId}")
     Integer getTodayCheckInByCustom(Integer customId);
+
+    //打卡记录对应的习惯
+    @Select("select custome_id from check_in where id=#{checkInId}")
+    Integer getCustomIdByCheckIn(Integer checkInId);
+    //打卡记录对应的用户
+    @Select("select user_id from check_in where id=#{checkInId}")
+    Integer getUserIdByCheckIn(Integer checkInId);
 
 }

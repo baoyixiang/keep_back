@@ -3,13 +3,11 @@ package com.keep.keep_backfront.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
-import com.keep.keep_backfront.VO.inVO.checkin.CheckInsInVO;
-import com.keep.keep_backfront.VO.inVO.checkin.CheckInCommentInOV;
-import com.keep.keep_backfront.VO.inVO.checkin.CheckInRequest;
-import com.keep.keep_backfront.VO.inVO.checkin.LikeCheckInOV;
+import com.keep.keep_backfront.VO.inVO.checkin.*;
 import com.keep.keep_backfront.VO.outVO.checkIn.AllCheckInOutVO;
 import com.keep.keep_backfront.VO.outVO.checkIn.CheckInDetail;
 import com.keep.keep_backfront.VO.outVO.checkIn.CheckInOutVO;
+import com.keep.keep_backfront.VO.outVO.checkIn.CheckInStateOutVO;
 import com.keep.keep_backfront.dao.CheckInDao;
 import com.keep.keep_backfront.dao.CustomDao;
 import com.keep.keep_backfront.dao.UserDao;
@@ -17,13 +15,15 @@ import com.keep.keep_backfront.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import javax.xml.crypto.Data;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Component
+@Service
 public class CheckInService {
 
     private CheckInDao checkInDao;
@@ -41,16 +41,28 @@ public class CheckInService {
     /**
      * 打卡
      */
-    public ResponseEntity insertCheckIn(CheckInRequest request){
+    public CheckInStateOutVO insertCheckIn(CheckInRequest request){
+
+        CheckInStateOutVO outVO = new CheckInStateOutVO();
+        outVO.setMsg("打卡成功");
 
         CheckIn checkIn = new CheckIn();
         List<CheckIn> checkIns = checkInDao.getCheckInsByCustomAndUser(request.getCustomId(),request.getUserId());//获取用户对应习惯的所有打卡记录
+        //判断用户今日是否已经在此习惯上打卡
+        SimpleDateFormat s1 = new SimpleDateFormat("D");
+        String daytime = s1.format(new Date());//今天是一年的第几天
+        for (CheckIn check:checkIns) {
+            String lastCheckTime = s1.format(check.getCheckInTime());
+            if(daytime.equals(lastCheckTime)){//用户今日已打卡
+                outVO.setOptSuccess(false);
+                outVO.setMsg("打卡失败，今日已经打卡");
+                return outVO;
+            }
+        }
+
         checkIn.setUserId(request.getUserId());
         checkIn.setCustomeId(request.getCustomId());
         checkIn.setCheckInTime(new Date());
-        checkIn.setWordContent(request.getWordContent());
-        checkIn.setImages(JSONArray.parseArray(JSON.toJSONString(request.getImages())));
-        checkIn.setVoice(request.getVoice());
         checkIn.setDays(checkIns.size()+1);//设置当前打卡的天数
 
         // 更新join custom表
@@ -61,7 +73,60 @@ public class CheckInService {
 
         try {
             customDao.updateJoinCustom(joinCustom);
+
             int effectedNum = checkInDao.insertCheckIn(checkIn);
+            if (effectedNum != 1) {
+                outVO.setOptSuccess(false);
+                outVO.setMsg("打卡失败，插入打卡记录失败");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            outVO.setOptSuccess(false);
+            outVO.setMsg("打卡失败");
+        }
+        return outVO;
+    }
+
+    /**
+     * 取消打卡
+     */
+    public CheckInStateOutVO deleteCheckIn(Integer checkInId){
+        CheckInStateOutVO outVO = new CheckInStateOutVO();
+        outVO.setMsg("取消成功");
+
+        Integer userId = checkInDao.getUserIdByCheckIn(checkInId);
+        Integer customId = checkInDao.getCustomIdByCheckIn(checkInId);
+        System.out.println(userId + "---" + customId);
+        // 更新join custom表
+        JoinCustom joinCustom = customDao.findJoinCustomByUserAndCustom(userId,customId);
+        joinCustom.setCheckDaysCount(customDao.getCheckDaysCountByUserAndCustom(userId,customId)-1);
+
+        try {
+            customDao.updateJoinCustom(joinCustom);
+
+            int effectedNum = checkInDao.deleteCheckIn(checkInId);
+            if (effectedNum != 1) {
+                outVO.setOptSuccess(false);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            outVO.setOptSuccess(false);
+        }
+        return outVO;
+    }
+
+    /**
+     * 记录心愿
+     */
+    public ResponseEntity checkInRecord(CheckInRecord record){
+        CheckIn checkIn = new CheckIn();
+        checkIn.setId(record.getCheckInId());
+        checkIn.setWordContent(record.getWordContent());
+        checkIn.setImages(JSONArray.parseArray(JSON.toJSONString(record.getImages())));
+        checkIn.setVoice(record.getVoice());
+
+        try {
+            int effectedNum = checkInDao.updateCheckIn(checkIn);
             if (effectedNum == 1) {
                 return ResponseEntity.status(HttpStatus.OK).build();
             } else {
@@ -110,23 +175,6 @@ public class CheckInService {
 
         try {
             int effectedNum = checkInDao.insertUserLikeCheckIn(userLikeCheckIn);//插入打卡点赞
-            if (effectedNum == 1) {
-                return ResponseEntity.status(HttpStatus.OK).build();
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    /**
-     * 取消/删除打卡记录
-     */
-    public ResponseEntity deleteCheckIn(Integer checkInId){
-        try {
-            int effectedNum = checkInDao.deleteCheckIn(checkInId);
             if (effectedNum == 1) {
                 return ResponseEntity.status(HttpStatus.OK).build();
             } else {

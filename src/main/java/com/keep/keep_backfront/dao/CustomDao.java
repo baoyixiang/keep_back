@@ -39,7 +39,7 @@ public interface CustomDao {
     Integer joinCustom(JoinCustom joinCustom);
 
     @Update("update join_custom set user_id=#{userId},custom_id=#{customId},join_time=#{joinTime},is_public=#{isPublic}," +
-            "target_days=#{targetDays},is_completed=#{isCompleted},beans_count=#{beansCount},check_days_count=#{checkDaysCount}" +
+            "target_days=#{targetDays},is_completed=#{isCompleted},beans_count=#{beansCount},check_days_count=#{checkDaysCount} " +
             "where id = #{id}")
     void updateJoinCustom(JoinCustom joinCustom);
 
@@ -81,4 +81,6 @@ public interface CustomDao {
     @Select("select join_count from custom where id=#{customId}")
     Integer getJoinCountByCustom(Integer customId);
 
+    @Select("select check_days_count from join_custom where user_id=#{userId} and custom_id=#{customId}")
+    Integer getCheckDaysCountByUserAndCustom(Integer userId,Integer customId);
 }

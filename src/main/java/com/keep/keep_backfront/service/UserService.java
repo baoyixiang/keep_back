@@ -14,13 +14,13 @@ import com.keep.keep_backfront.entity.User;
 import com.keep.keep_backfront.entity.UserAttention;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Component
+@Service
 public class UserService {
 
     private UserDao userDao;

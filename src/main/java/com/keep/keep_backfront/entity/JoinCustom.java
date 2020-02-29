@@ -17,6 +17,22 @@ public class JoinCustom implements Serializable {
   private Integer checkDaysCount;
   private Boolean isArchive;
 
+  @Override
+  public String toString() {
+    return "JoinCustom{" +
+            "id=" + id +
+            ", userId=" + userId +
+            ", customId=" + customId +
+            ", joinTime=" + joinTime +
+            ", isPublic=" + isPublic +
+            ", targetDays=" + targetDays +
+            ", isCompleted=" + isCompleted +
+            ", beansCount=" + beansCount +
+            ", checkDaysCount=" + checkDaysCount +
+            ", isArchive=" + isArchive +
+            '}';
+  }
+
   public Boolean getArchive() {
     return isArchive;
   }

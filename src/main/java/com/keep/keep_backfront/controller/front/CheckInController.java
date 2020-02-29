@@ -3,10 +3,12 @@ package com.keep.keep_backfront.controller.front;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.keep.keep_backfront.VO.inVO.checkin.CheckInCommentInOV;
+import com.keep.keep_backfront.VO.inVO.checkin.CheckInRecord;
 import com.keep.keep_backfront.VO.inVO.checkin.CheckInRequest;
 import com.keep.keep_backfront.VO.inVO.checkin.LikeCheckInOV;
 import com.keep.keep_backfront.VO.inVO.custom.UserCustomInVO;
 import com.keep.keep_backfront.VO.outVO.checkIn.CheckInDetail;
+import com.keep.keep_backfront.VO.outVO.checkIn.CheckInStateOutVO;
 import com.keep.keep_backfront.dao.CheckInDao;
 import com.keep.keep_backfront.entity.CheckIn;
 import com.keep.keep_backfront.service.CheckInService;
@@ -36,13 +38,18 @@ public class CheckInController {
 
     @ApiOperation("打卡")
     @PostMapping("checkIn")
-    public ResponseEntity checkIn(@RequestBody CheckInRequest request){
+    public CheckInStateOutVO checkIn(@RequestBody CheckInRequest request){
         return checkInService.insertCheckIn(request);
     }
-    @ApiOperation("取消/删除打卡")
+    @ApiOperation("取消打卡")
     @DeleteMapping("deleteCheckIn/{checkInId}")
-    public ResponseEntity deleteCheckIn(@PathVariable Integer checkInId){
+    public CheckInStateOutVO deleteCheckIn(@PathVariable Integer checkInId){
         return checkInService.deleteCheckIn(checkInId);
+    }
+    @ApiOperation("记录心情")
+    @PostMapping("checkInRecord")
+    public ResponseEntity recordCheckIn(@RequestBody CheckInRecord record){
+        return checkInService.checkInRecord(record);
     }
 
     @ApiOperation("打卡评论")
