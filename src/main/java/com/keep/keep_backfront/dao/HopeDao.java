@@ -1,17 +1,13 @@
 package com.keep.keep_backfront.dao;
 
 import com.keep.keep_backfront.VO.inVO.hope.AddLikeHopeVO;
-import com.keep.keep_backfront.VO.inVO.hope.HopeListInVO;
 import com.keep.keep_backfront.VO.outVO.hope.HopeListOutVO;
 import com.keep.keep_backfront.entity.Hope;
 import com.keep.keep_backfront.entity.HopeComment;
-import com.keep.keep_backfront.entity.HopeDetail;
 import com.keep.keep_backfront.entity.UserLikeHope;
 import com.keep.keep_backfront.handler.ArrayJsonHandler;
 import org.apache.ibatis.annotations.*;
-import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,21 +37,23 @@ public interface HopeDao {
 //            @Result(column = "name",property = "name",jdbcType = JdbcType.VARCHAR),
 //            @Result(column = "avatar",property = "avatar",jdbcType = JdbcType.VARCHAR)
 //    })
-    @Results(id = "hopeMap", value = {
+    @Results(id = "hopeListOutVOMap", value = {
             @Result(column = "images", property = "images", typeHandler = ArrayJsonHandler.class)
     })
     List<HopeListOutVO> allHopesList();
 
     //根据心愿id获取心愿
     @Select("select * from hope where id=#{hopeId}")
-    @ResultMap("hopeMap")
+    @Results(id = "hopeMap", value = {
+            @Result(column = "images", property = "images", typeHandler = ArrayJsonHandler.class)
+    })
     Hope getHopeByHopeId(Integer hopeId);
 
     //根据userId返回该用户所有树洞心愿
     @Select("select * from hope " +
             "where create_user_id=#{userId}")
     @ResultMap("hopeMap")
-    List<Hope>HopeListByUser(Integer userId);
+    List<Hope> HopeListByUser(Integer userId);
 
     //随机返回一条树洞心愿
     @Select("select * from hope order by rand() limit 1")

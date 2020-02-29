@@ -8,7 +8,7 @@ import com.keep.keep_backfront.VO.outVO.hope.HopeListOutVO;
 import com.keep.keep_backfront.dao.HopeDao;
 import com.keep.keep_backfront.entity.Hope;
 import com.keep.keep_backfront.entity.HopeComment;
-import com.keep.keep_backfront.entity.HopeDetail;
+import com.keep.keep_backfront.VO.outVO.hope.HopeDetail;
 import com.keep.keep_backfront.entity.UserLikeHope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -197,11 +197,14 @@ public class HopeService {
      */
     public HopeDetail hopeDetail(HopeDetailInVO request){
         HopeDetail hopeDetail = new HopeDetail();
+        Hope hope = new Hope();
         List<UserLikeHope> userLikeHopeList = new ArrayList<UserLikeHope>();
         Integer hopeId = request.getHopeId();
         try{
-            Hope hope = hopeDao.getHopeByHopeId(hopeId);
+            System.out.println(hopeDetail.toString());
+            hope = hopeDao.getHopeByHopeId(hopeId);
 
+            System.out.println(hopeDetail.toString());
 //            System.out.println(hope.getImages());
             hopeDetail.setHope(hope);
             hopeDetail.setHopecomments(hopeDao.hopeComments(hopeId));
@@ -211,12 +214,6 @@ public class HopeService {
                     hopeDetail.setLiked(true);
                 }
             }
-
-//            hopeDetail.setWordContent(hope.getWordContent());
-//            hopeDetail.setLikeCount(hope.getLikeCount());
-//            hopeDetail.setCommentCount(hope.getCommentCount());
-//            hopeDetail.setHopeId(hope.getId());
-//            hopeDetail.setImages(hope.getImages());
 
         }catch (Exception e){
             e.printStackTrace();
