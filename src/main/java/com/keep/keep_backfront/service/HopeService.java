@@ -6,9 +6,11 @@ import com.github.pagehelper.PageHelper;
 import com.keep.keep_backfront.VO.inVO.hope.*;
 import com.keep.keep_backfront.VO.outVO.hope.HopeListOutVO;
 import com.keep.keep_backfront.dao.HopeDao;
+import com.keep.keep_backfront.dao.UserDao;
 import com.keep.keep_backfront.entity.Hope;
 import com.keep.keep_backfront.entity.HopeComment;
 import com.keep.keep_backfront.VO.outVO.hope.HopeDetail;
+import com.keep.keep_backfront.entity.User;
 import com.keep.keep_backfront.entity.UserLikeHope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,10 +25,12 @@ import java.util.List;
 public class HopeService {
 
     private HopeDao hopeDao;
+    private UserDao userDao;
 
     @Autowired
-    public HopeService(HopeDao hopeDao){
+    public HopeService(HopeDao hopeDao,UserDao userDao){
         this.hopeDao = hopeDao;
+        this.userDao = userDao;
     }
 
     /**
@@ -197,16 +201,20 @@ public class HopeService {
      */
     public HopeDetail hopeDetail(HopeDetailInVO request){
         HopeDetail hopeDetail = new HopeDetail();
-        Hope hope = new Hope();
+        Hope hope = new Hope();//心愿详情对应的心愿
+        User user = new User();//心愿对应的创建用户
+
         List<UserLikeHope> userLikeHopeList = new ArrayList<UserLikeHope>();
         Integer hopeId = request.getHopeId();
         try{
             System.out.println(hopeDetail.toString());
             hope = hopeDao.getHopeByHopeId(hopeId);
+            user = userDao.getUserById(hope.getCreateUserId());
 
             System.out.println(hopeDetail.toString());
-//            System.out.println(hope.getImages());
+
             hopeDetail.setHope(hope);
+            hopeDetail.setCreateUser(user);
             hopeDetail.setHopecomments(hopeDao.hopeComments(hopeId));
             userLikeHopeList = hopeDao.getUserLikeHopeByHopeId(hopeId);
             for (UserLikeHope userlikehope:userLikeHopeList) {//遍历hope点赞记录，查询当前用户是否点赞该hope
