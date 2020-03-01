@@ -8,4 +8,5 @@ import lombok.Data;
 public class CustomListOutVO {
     private Custom custom;
     private JoinCustom joinCustom;
+    private Boolean isCheckInToday;
 }

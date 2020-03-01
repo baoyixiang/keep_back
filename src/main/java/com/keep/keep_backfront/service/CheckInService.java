@@ -92,7 +92,7 @@ public class CheckInService {
      */
     public CheckInStateOutVO deleteCheckIn(CheckInRequest request){
         CheckInStateOutVO outVO = new CheckInStateOutVO();
-        Integer checkInId = checkInDao.getCheckInIdByUserAndCustom(request.getUserId(),request.getCustomId());
+        Integer checkInId = checkInDao.getCheckInIdByUserAndCustom(request.getUserId(),request.getCustomId()).getId();
         if(checkInId==0){
             outVO.setOptSuccess(false);
             outVO.setMsg("取消失败,当日未打卡");
@@ -126,8 +126,7 @@ public class CheckInService {
      * 记录心愿
      */
     public ResponseEntity checkInRecord(CheckInRecord record){
-        CheckIn checkIn = new CheckIn();
-        checkIn.setId(checkInDao.getCheckInIdByUserAndCustom(record.getUserId(),record.getCustomId()));
+        CheckIn checkIn = checkInDao.getCheckInIdByUserAndCustom(record.getUserId(),record.getCustomId());
         checkIn.setWordContent(record.getWordContent());
         checkIn.setImages(JSONArray.parseArray(JSON.toJSONString(record.getImages())));
         checkIn.setVoice(record.getVoice());

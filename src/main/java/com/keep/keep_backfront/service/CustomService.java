@@ -9,6 +9,7 @@ import com.keep.keep_backfront.VO.outVO.custom.CustomDetailOutVO;
 import com.keep.keep_backfront.VO.outVO.custom.CustomListOutVO;
 import com.keep.keep_backfront.dao.CheckInDao;
 import com.keep.keep_backfront.dao.CustomDao;
+import com.keep.keep_backfront.entity.CheckIn;
 import com.keep.keep_backfront.entity.Custom;
 import com.keep.keep_backfront.entity.JoinCustom;
 import com.keep.keep_backfront.handler.exception.ParameterErrorException;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -108,11 +110,16 @@ public class CustomService {
                     if (custom.getCreateUserId().equals(inVO.getUserId())) {
                         outVO.setCustom(custom);
                         outVO.setJoinCustom(it);
+
+                        // 看这个用户今天是否在这个习惯上打卡
+                        outVO.setIsCheckInToday(isTodayCheckIn(it.getCustomId(), inVO.getUserId()));
+
                         result.add(outVO);
                     }
                 } else {
                     outVO.setJoinCustom(it);
                     outVO.setCustom(custom);
+                    outVO.setIsCheckInToday(isTodayCheckIn(it.getCustomId(), inVO.getUserId()));
                     result.add(outVO);
                 }
             });
@@ -123,6 +130,19 @@ public class CustomService {
         }
     }
 
+    private Boolean isTodayCheckIn(Integer customId, Integer userId) {
+        List<CheckIn> checkIns = checkInDao.getCheckInsByCustomAndUser(customId, userId);
+        if (checkIns.isEmpty()) {
+            return false;
+        } else {
+            Calendar lastCalendar = Calendar.getInstance();
+            lastCalendar.setTime(checkIns.get(0).getCheckInTime());
+            Calendar nowCalendar = Calendar.getInstance();
+            Boolean isSameYear = nowCalendar.get(Calendar.YEAR) == lastCalendar.get(Calendar.YEAR);
+            Boolean isSameDay = nowCalendar.get(Calendar.DAY_OF_YEAR) == lastCalendar.get(Calendar.DAY_OF_YEAR);
+            return isSameYear && isSameDay;
+        }
+    }
     /**
      * 用户加入一个习惯
      */
