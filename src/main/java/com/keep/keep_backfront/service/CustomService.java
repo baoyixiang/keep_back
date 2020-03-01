@@ -133,7 +133,6 @@ public class CustomService {
         }else{
             targetDay = 30;
         }
-
         JoinCustom joinCustom = new JoinCustom();
         joinCustom.setUserId(inVO.getUserId());
         joinCustom.setCustomId(inVO.getCustomId());
@@ -144,12 +143,17 @@ public class CustomService {
         joinCustom.setBeansCount(inVO.getBeansCount());
         joinCustom.setCheckDaysCount(0);
         joinCustom.setArchive(false);
-
         Custom custom = customDao.findCustomById(joinCustom.getCustomId());
+        List<Integer> addedCustomList = customDao.findAddedCustomById(joinCustom.getUserId());
         custom.setJoinCount(custom.getJoinCount()+1);
+        System.out.println("2:参加人数+1");
         try {
-            customDao.updateCustom(custom);
-            customDao.joinCustom(joinCustom);
+            if(!addedCustomList.contains(joinCustom.getCustomId())) {
+                customDao.updateCustomJoinCount(custom);
+                customDao.joinCustom(joinCustom);
+            }else {
+                return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
+            }
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -200,7 +204,7 @@ public class CustomService {
         }else {
             recommendCustomList = customDao.findRecommendCustomByTag(request.getTag());
         }
-        for(int i = 0; i < recommendCustomList.size(); i++) {
+        for(int i = recommendCustomList.size() - 1; i >= 0; i--) {
             if(customList.contains(recommendCustomList.get(i).getId())) {
                 recommendCustomList.remove(recommendCustomList.get(i));
             }

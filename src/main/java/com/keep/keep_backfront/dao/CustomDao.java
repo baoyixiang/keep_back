@@ -29,7 +29,7 @@ public interface CustomDao {
 
     @Update("update custom set title=#{title}, logo=#{logo}, create_user_id=#{createUserId}, " +
             "create_time=#{createTime}, tags=#{tags, typeHandler=com.keep.keep_backfront.handler.ArrayJsonHandler}, " +
-            "is_default=#{isDefault}, join_count=#{joinCount}")
+            "is_default=#{isDefault}, join_count=#{joinCount} where id=#{id}")
     void updateCustom(Custom custom);
 
     @Insert("insert into join_custom(user_id,custom_id,join_time,is_public,target_days,is_completed,beans_count,check_days_count,is_archive)" +
@@ -37,6 +37,9 @@ public interface CustomDao {
             "#{checkDaysCount},#{isArchive})")
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
     Integer joinCustom(JoinCustom joinCustom);
+
+    @Update("update custom set join_count=#{joinCount} where id=#{id}")
+    void updateCustomJoinCount(Custom custom);
 
     @Update("update join_custom set user_id=#{userId},custom_id=#{customId},join_time=#{joinTime},is_public=#{isPublic}," +
             "target_days=#{targetDays},is_completed=#{isCompleted},beans_count=#{beansCount},check_days_count=#{checkDaysCount} " +
