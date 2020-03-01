@@ -90,9 +90,13 @@ public class CheckInService {
     /**
      * 取消打卡
      */
-    public CheckInStateOutVO deleteCheckIn(Integer checkInId){
+    public CheckInStateOutVO deleteCheckIn(CheckInRequest request){
         CheckInStateOutVO outVO = new CheckInStateOutVO();
-        outVO.setMsg("取消成功");
+        Integer checkInId = checkInDao.getCheckInIdByUserAndCustom(request.getUserId(),request.getCustomId());
+        if(checkInId==0){
+            outVO.setOptSuccess(false);
+            outVO.setMsg("取消失败,当日未打卡");
+        }
 
         Integer userId = checkInDao.getUserIdByCheckIn(checkInId);
         Integer customId = checkInDao.getCustomIdByCheckIn(checkInId);
@@ -107,6 +111,9 @@ public class CheckInService {
             int effectedNum = checkInDao.deleteCheckIn(checkInId);
             if (effectedNum != 1) {
                 outVO.setOptSuccess(false);
+            }else {
+                outVO.setOptSuccess(true);
+                outVO.setMsg("取消成功");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -120,7 +127,7 @@ public class CheckInService {
      */
     public ResponseEntity checkInRecord(CheckInRecord record){
         CheckIn checkIn = new CheckIn();
-        checkIn.setId(record.getCheckInId());
+        checkIn.setId(checkInDao.getCheckInIdByUserAndCustom(record.getUserId(),record.getCustomId()));
         checkIn.setWordContent(record.getWordContent());
         checkIn.setImages(JSONArray.parseArray(JSON.toJSONString(record.getImages())));
         checkIn.setVoice(record.getVoice());

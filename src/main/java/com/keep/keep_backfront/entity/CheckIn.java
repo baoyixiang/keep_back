@@ -18,6 +18,19 @@ public class CheckIn implements Serializable {
   private String voice;
   private Integer days;
 
+  @Override
+  public String toString() {
+    return "CheckIn{" +
+            "id=" + id +
+            ", userId=" + userId +
+            ", customeId=" + customeId +
+            ", checkInTime=" + checkInTime +
+            ", wordContent='" + wordContent + '\'' +
+            ", images=" + images +
+            ", voice='" + voice + '\'' +
+            ", days=" + days +
+            '}';
+  }
 
   public Integer getId() {
     return id;

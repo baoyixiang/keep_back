@@ -42,9 +42,9 @@ public class CheckInController {
         return checkInService.insertCheckIn(request);
     }
     @ApiOperation("取消打卡")
-    @DeleteMapping("deleteCheckIn/{checkInId}")
-    public CheckInStateOutVO deleteCheckIn(@PathVariable Integer checkInId){
-        return checkInService.deleteCheckIn(checkInId);
+    @DeleteMapping("deleteCheckIn")
+    public CheckInStateOutVO deleteCheckIn(@RequestBody CheckInRequest request){
+        return checkInService.deleteCheckIn(request);
     }
     @ApiOperation("记录心情")
     @PostMapping("checkInRecord")

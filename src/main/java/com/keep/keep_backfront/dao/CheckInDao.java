@@ -86,4 +86,9 @@ public interface CheckInDao {
     @Select("select user_id from check_in where id=#{checkInId}")
     Integer getUserIdByCheckIn(Integer checkInId);
 
+    //用户习惯最新打卡
+    @Select("select id from check_in where date(check_in_time) = curdate() " +
+            "and user_id=#{userId} and custome_id=#{customId}")
+    Integer getCheckInIdByUserAndCustom(Integer userId,Integer customId);
+
 }
