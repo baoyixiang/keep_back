@@ -257,7 +257,15 @@ public class CheckInService {
         PageBean<CheckInDetail> results = new PageBean<>(inVO.getPageNo(), inVO.getPageSize(), info.getTotal());
         List<CheckInDetail> checkInDetails = new ArrayList<>();
         checkIns.forEach(it -> {
-            checkInDetails.add(getCheckInDetailById(it.getId()));
+            CheckInDetail detail = getCheckInDetailById(it.getId());
+            // 判断是否自己已经点赞
+            detail.setIsSelfLike(false);
+            detail.getLikeUsers().forEach(user -> {
+                if (user.getId().equals(inVO.getMyUserId())) {
+                    detail.setIsSelfLike(true);
+                }
+            });
+            checkInDetails.add(detail);
         });
         results.setItems(checkInDetails);
         return results;
