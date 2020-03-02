@@ -2,16 +2,15 @@ package com.keep.keep_backfront.controller.front;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.keep.keep_backfront.VO.inVO.checkin.CheckInCommentInOV;
-import com.keep.keep_backfront.VO.inVO.checkin.CheckInRecord;
-import com.keep.keep_backfront.VO.inVO.checkin.CheckInRequest;
-import com.keep.keep_backfront.VO.inVO.checkin.LikeCheckInOV;
+import com.github.pagehelper.PageInfo;
+import com.keep.keep_backfront.VO.inVO.checkin.*;
 import com.keep.keep_backfront.VO.inVO.custom.UserCustomInVO;
 import com.keep.keep_backfront.VO.outVO.checkIn.CheckInDetail;
 import com.keep.keep_backfront.VO.outVO.checkIn.CheckInStateOutVO;
 import com.keep.keep_backfront.dao.CheckInDao;
 import com.keep.keep_backfront.entity.CheckIn;
 import com.keep.keep_backfront.service.CheckInService;
+import com.keep.keep_backfront.util.PageBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Delete;
@@ -78,8 +77,8 @@ public class CheckInController {
 
     @ApiOperation("习惯的打卡记录")
     @PostMapping("CustomCheckIns")
-    public List<CheckIn> getCustomCheckInList(@RequestBody UserCustomInVO userCustomInVO){
-        return checkInDao.getCheckInsByCustomAndUser(userCustomInVO.getCustomId(),userCustomInVO.getUserId());
+    public PageBean<CheckInDetail> getCustomCheckInList(@RequestBody CheckInsInVO request){
+        return checkInService.userGetCheckIns(request);
     };
 
 }

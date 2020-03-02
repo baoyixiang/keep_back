@@ -8,6 +8,7 @@ import com.keep.keep_backfront.entity.UserLikeCheckIn;
 import com.keep.keep_backfront.handler.ArrayJsonHandler;
 import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -44,9 +45,10 @@ public interface CheckInDao {
     List<User> getLikeUsersByCheckInId(Integer checkInId);
 
     //查询用户一个习惯所有的打卡
-    @Select("select * from check_in WHERE custome_id=#{customeId} and user_id=#{userId} ORDER BY check_in_time DESC")
+    @SelectProvider(type = CheckInDaoProvider.class, method = "getCheckIns")
     @ResultMap("checkInMap")
-    List<CheckIn> getCheckInsByCustomAndUser(Integer customeId,Integer userId);
+    List<CheckIn> getCheckInsByCustomAndUser(Integer customeId, Integer userId);
+
     //打卡
     @Insert("insert into check_in(user_id,custome_id,check_in_time,days)" +
             "values(#{userId},#{customeId},#{checkInTime},#{days})")
@@ -91,4 +93,15 @@ public interface CheckInDao {
             "and user_id=#{userId} and custome_id=#{customId}")
     CheckIn getCheckInIdByUserAndCustom(Integer userId,Integer customId);
 
+    class CheckInDaoProvider{
+        public String getCheckIns(Integer customeId, Integer userId) {
+            return new SQL(){{
+                SELECT("*");
+                FROM("check_in");
+                if (customeId != null) WHERE("custome_id=#{customeId}");
+                if (userId != null) WHERE("user_id=#{userId}");
+                ORDER_BY("check_in_time DESC");
+            }}.toString();
+        }
+    }
 }

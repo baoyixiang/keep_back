@@ -3,6 +3,7 @@ package com.keep.keep_backfront.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.keep.keep_backfront.VO.inVO.checkin.*;
 import com.keep.keep_backfront.VO.outVO.checkIn.AllCheckInOutVO;
 import com.keep.keep_backfront.VO.outVO.checkIn.CheckInDetail;
@@ -12,6 +13,7 @@ import com.keep.keep_backfront.dao.CheckInDao;
 import com.keep.keep_backfront.dao.CustomDao;
 import com.keep.keep_backfront.dao.UserDao;
 import com.keep.keep_backfront.entity.*;
+import com.keep.keep_backfront.util.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -244,5 +246,20 @@ public class CheckInService {
         }
 
         return allCheckInOutVO;
+    }
+
+    // 用户端获取一个习惯的所有的打卡记录，包括评论和点赞
+    public PageBean<CheckInDetail> userGetCheckIns(CheckInsInVO inVO) {
+        PageHelper.startPage(inVO.getPageNo(), inVO.getPageSize());
+        List<CheckIn> checkIns = checkInDao.getCheckInsByCustomAndUser(inVO.getCustomId(), inVO.getUserId());
+        PageInfo<CheckIn> info = new PageInfo<>(checkIns);
+
+        PageBean<CheckInDetail> results = new PageBean<>(inVO.getPageNo(), inVO.getPageSize(), info.getTotal());
+        List<CheckInDetail> checkInDetails = new ArrayList<>();
+        checkIns.forEach(it -> {
+            checkInDetails.add(getCheckInDetailById(it.getId()));
+        });
+        results.setItems(checkInDetails);
+        return results;
     }
 }
