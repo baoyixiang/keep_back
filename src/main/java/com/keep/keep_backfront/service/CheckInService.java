@@ -197,13 +197,22 @@ public class CheckInService {
     /**
      * 获取打卡详情
      */
-    public CheckInDetail getCheckInDetailById(Integer checkInId){
+    public CheckInDetail getCheckInDetailById(Integer checkInId, Integer myUserId){
         CheckInDetail checkInDetail = new CheckInDetail();
 
         try{
-            checkInDetail.setCheckIn(checkInDao.getCheckInByCheckInId(checkInId));//打卡记录
+            CheckIn checkIn = checkInDao.getCheckInByCheckInId(checkInId);
+            checkInDetail.setCheckIn(checkIn);//打卡记录
             checkInDetail.setCheckInComments(checkInDao.getCheckInCommentsByCheckInId(checkInId));//打卡评论
             checkInDetail.setLikeUsers(checkInDao.getLikeUsersByCheckInId(checkInId));//打卡的点赞用户
+            checkInDetail.setUser(userDao.getUserById(checkIn.getUserId())); // 这个打卡的用户信息
+            checkInDetail.setCustomTitle(customDao.findCustomById(checkIn.getCustomeId()).getTitle()); // 打卡的习惯title
+            checkInDetail.setIsSelfLike(false); // 用户是否自己打卡了
+            checkInDetail.getLikeUsers().forEach(user -> {
+                if (user.getId().equals(myUserId)) {
+                    checkInDetail.setIsSelfLike(true);
+                }
+            });
         }catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException("checkInDetail信息获取失败");
@@ -257,15 +266,7 @@ public class CheckInService {
         PageBean<CheckInDetail> results = new PageBean<>(inVO.getPageNo(), inVO.getPageSize(), info.getTotal());
         List<CheckInDetail> checkInDetails = new ArrayList<>();
         checkIns.forEach(it -> {
-            CheckInDetail detail = getCheckInDetailById(it.getId());
-            // 判断是否自己已经点赞
-            detail.setIsSelfLike(false);
-            detail.getLikeUsers().forEach(user -> {
-                if (user.getId().equals(inVO.getMyUserId())) {
-                    detail.setIsSelfLike(true);
-                }
-            });
-            checkInDetails.add(detail);
+            checkInDetails.add(getCheckInDetailById(it.getId(), inVO.getMyUserId()));
         });
         results.setItems(checkInDetails);
         return results;

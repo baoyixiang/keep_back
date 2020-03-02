@@ -63,11 +63,11 @@ public class CheckInController {
         return checkInService.insertLikeCheckIn(request);
     }
 
-    @ApiOperation("打卡详情")
-    @GetMapping("checkInDetail/{checkInId}")
-    public CheckInDetail getCheckInDetail(@PathVariable Integer checkInId){
-        return checkInService.getCheckInDetailById(checkInId);
-    }
+//    @ApiOperation("打卡详情")
+//    @GetMapping("checkInDetail/{checkInId}")
+//    public CheckInDetail getCheckInDetail(@PathVariable Integer checkInId){
+//        return checkInService.getCheckInDetailById(checkInId);
+//    }
 
     @ApiOperation("我的打卡记录")
     @GetMapping("myCheckInList/{userId}")

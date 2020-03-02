@@ -14,4 +14,6 @@ public class CheckInDetail {
     private List<CheckInComments> checkInComments;
     private List<User> likeUsers;
     private Boolean isSelfLike;
+    private User user;
+    private String customTitle;
 }
