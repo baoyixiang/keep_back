@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 public class CheckInDetail {
     private CheckIn checkIn;
-    private List<CheckInComments> checkInComments;
+    private List<CheckInCommentsOutVO> checkInComments;
     private List<User> likeUsers;
     private Boolean isSelfLike;
     private User user;

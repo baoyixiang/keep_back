@@ -5,15 +5,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.keep.keep_backfront.VO.inVO.checkin.*;
-import com.keep.keep_backfront.VO.outVO.checkIn.AllCheckInOutVO;
-import com.keep.keep_backfront.VO.outVO.checkIn.CheckInDetail;
-import com.keep.keep_backfront.VO.outVO.checkIn.CheckInOutVO;
-import com.keep.keep_backfront.VO.outVO.checkIn.CheckInStateOutVO;
+import com.keep.keep_backfront.VO.outVO.checkIn.*;
 import com.keep.keep_backfront.dao.CheckInDao;
 import com.keep.keep_backfront.dao.CustomDao;
 import com.keep.keep_backfront.dao.UserDao;
 import com.keep.keep_backfront.entity.*;
 import com.keep.keep_backfront.util.PageBean;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -203,7 +201,26 @@ public class CheckInService {
         try{
             CheckIn checkIn = checkInDao.getCheckInByCheckInId(checkInId);
             checkInDetail.setCheckIn(checkIn);//打卡记录
-            checkInDetail.setCheckInComments(checkInDao.getCheckInCommentsByCheckInId(checkInId));//打卡评论
+
+            // 打卡评论
+            List<CheckInCommentsOutVO> commentsOutVOS = new ArrayList<>();
+            checkInDao.getCheckInCommentsByCheckInId(checkInId).forEach(it -> {
+                CheckInCommentsOutVO oneComment = new CheckInCommentsOutVO();
+                BeanUtils.copyProperties(it, oneComment);
+
+                User user = userDao.getUserById(oneComment.getUserId());
+                oneComment.setUserName(user.getName());
+                oneComment.setUserAvatar(user.getAvatar());
+
+                if (oneComment.getReplyTo() != null) {
+                    User replyToUser = userDao.getUserById(oneComment.getReplyTo());
+                    oneComment.setReplyToName(replyToUser.getName());
+                    oneComment.setReplyToAvatar(replyToUser.getAvatar());
+                }
+
+                commentsOutVOS.add(oneComment);
+            });
+            checkInDetail.setCheckInComments(commentsOutVOS);//打卡评论
             checkInDetail.setLikeUsers(checkInDao.getLikeUsersByCheckInId(checkInId));//打卡的点赞用户
             checkInDetail.setUser(userDao.getUserById(checkIn.getUserId())); // 这个打卡的用户信息
             checkInDetail.setCustomTitle(customDao.findCustomById(checkIn.getCustomeId()).getTitle()); // 打卡的习惯title
