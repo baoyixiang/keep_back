@@ -93,6 +93,22 @@ public class HopeService {
         }
         return hopeList;
     }
+    /**
+     * 获取用户能看到的心愿列表
+     */
+    public List<HopeListOutVO> getUserAllHopesList(MyAllHopeListInVO invo){
+        PageHelper.startPage(invo.getPageNo(), invo.getPageSize());
+        List<HopeListOutVO> hopeList ;
+        try{
+            hopeList = hopeDao.allHopesList();
+            // 去除其他人创建的"仅自己可见"心愿
+            hopeList.removeIf(outVO -> outVO.getIsSeeSelf() && !outVO.getCreateUserId().equals(invo.getMyUserId()));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("allHopeList信息获取失败");
+        }
+        return hopeList;
+    }
 
     /**
      * 获取一个用户发布的树洞心愿
