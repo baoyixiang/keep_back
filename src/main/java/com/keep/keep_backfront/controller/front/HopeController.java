@@ -46,10 +46,10 @@ public class HopeController {
         return hopeService.getHopeRandom();
     }
 
-    @ApiOperation("获取树洞中的所有树洞心愿列表")
-    @PostMapping("allHopes")
-    public List<HopeListOutVO> getAllHopesList(@RequestBody AllHopeListInVO request){
-        return hopeService.getAllHopesList(request);
+    @ApiOperation("获取我能看到的心愿列表")
+    @PostMapping("myAllHopes")
+    public List<HopeListOutVO> getAllHopesList(@RequestBody MyAllHopeListInVO request){
+        return hopeService.getUserAllHopesList(request);
     }
 
     @ApiOperation("获取指定用户的树洞心愿列表")
