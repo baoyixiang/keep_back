@@ -288,4 +288,21 @@ public class CheckInService {
         results.setItems(checkInDetails);
         return results;
     }
+
+    //管理员端删除打卡记录
+    public ResponseEntity delCheckIn(Integer checkInId){
+        try {
+            int effectedNum = checkInDao.deleteCheckIn(checkInId);//删除打卡记录
+            checkInDao.deleteCheckInCommentsByCheckIn(checkInId);//删除打卡记录对应所有评论
+
+            if (effectedNum == 1) {
+                return ResponseEntity.status(HttpStatus.OK).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

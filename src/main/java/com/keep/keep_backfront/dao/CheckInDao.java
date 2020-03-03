@@ -104,4 +104,8 @@ public interface CheckInDao {
             }}.toString();
         }
     }
+
+    //删除打卡对应所有评论
+    @Delete("delete from check_in_comments where check_in_id=#{checkInId}")
+    Integer deleteCheckInCommentsByCheckIn(Integer checkInId);
 }
