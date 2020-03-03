@@ -113,11 +113,12 @@ public class HopeService {
     /**
      * 获取一个用户发布的树洞心愿
      */
-    public List<Hope> getHopeListByUser(HopeListInVO hopeListInVO){
+    public List<HopeListOutVO> getHopeListByUser(HopeListInVO hopeListInVO){
         PageHelper.startPage(hopeListInVO.getPageNo(), hopeListInVO.getPageSize());
-        List<Hope> hopeList ;
+        List<HopeListOutVO> hopeList ;
         try{
-            hopeList = hopeDao.HopeListByUser(hopeListInVO.getUserId());
+            hopeList = hopeDao.allHopesList();
+            hopeList.removeIf(outVO -> !outVO.getCreateUserId().equals(hopeListInVO.getUserId()));
             System.out.println(hopeList);
         }catch (Exception e){
             e.printStackTrace();

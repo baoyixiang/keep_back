@@ -54,7 +54,7 @@ public class HopeController {
 
     @ApiOperation("获取指定用户的树洞心愿列表")
     @PostMapping("hopeList")
-    public List<Hope> getHopesListByUser(@RequestBody HopeListInVO request){
+    public List<HopeListOutVO> getHopesListByUser(@RequestBody HopeListInVO request){
         return hopeService.getHopeListByUser(request);
     }
 
