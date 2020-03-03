@@ -20,4 +20,22 @@ public class HopeListOutVO {
 
     private String avatar;
     private String name;
+
+    @Override
+    public String toString() {
+        return "HopeListOutVO{" +
+                "id=" + id +
+                ", wordContent='" + wordContent + '\'' +
+                ", images=" + images +
+                ", voice='" + voice + '\'' +
+                ", createUserId=" + createUserId +
+                ", createTime=" + createTime +
+                ", isAnonymous=" + isAnonymous +
+                ", isSeeSelf=" + isSeeSelf +
+                ", likeCount=" + likeCount +
+                ", CommentCount=" + CommentCount +
+                ", avatar='" + avatar + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
