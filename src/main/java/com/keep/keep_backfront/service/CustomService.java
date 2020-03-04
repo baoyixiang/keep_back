@@ -200,6 +200,12 @@ public class CustomService {
 
         try {
             customDao.deleteCustom(customId);
+            customDao.deleteJoinCustom(customId);
+            checkInDao.getCheckInsByCustomAndUser(customId, null).forEach(it -> {
+                checkInDao.deleteCheckIn(it.getId());
+                checkInDao.deleteCheckInCommentsByCheckIn(it.getId());
+                checkInDao.deleteLikeCheckIn(it.getId());
+            });
             return ResponseEntity.ok().build();
         } catch (Exception ex) {
             ex.printStackTrace();

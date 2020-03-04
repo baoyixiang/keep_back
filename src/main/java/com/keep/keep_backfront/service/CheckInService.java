@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.xml.crypto.Data;
 import java.text.SimpleDateFormat;
@@ -194,12 +195,20 @@ public class CheckInService {
 
     /**
      * 获取打卡详情
+     * @Param isRecord 表示是否是要被记录心情过的打卡
      */
-    public CheckInDetail getCheckInDetailById(Integer checkInId, Integer myUserId){
+    public CheckInDetail getCheckInDetailById(Integer checkInId, Integer myUserId, Boolean isRecord){
         CheckInDetail checkInDetail = new CheckInDetail();
 
         try{
             CheckIn checkIn = checkInDao.getCheckInByCheckInId(checkInId);
+            if (isRecord &&
+                    StringUtils.isEmpty(checkIn.getWordContent()) &&
+                    checkIn.getImages().isEmpty() &&
+                    StringUtils.isEmpty(checkIn.getVoice())) {
+                return null;
+            }
+
             checkInDetail.setCheckIn(checkIn);//打卡记录
 
             // 打卡评论
@@ -283,7 +292,9 @@ public class CheckInService {
         PageBean<CheckInDetail> results = new PageBean<>(inVO.getPageNo(), inVO.getPageSize(), info.getTotal());
         List<CheckInDetail> checkInDetails = new ArrayList<>();
         checkIns.forEach(it -> {
-            checkInDetails.add(getCheckInDetailById(it.getId(), inVO.getMyUserId()));
+            CheckInDetail oneItem = getCheckInDetailById(it.getId(), inVO.getMyUserId(), true);
+            if (oneItem != null)
+                checkInDetails.add(oneItem);
         });
         results.setItems(checkInDetails);
         return results;

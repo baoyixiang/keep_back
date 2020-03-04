@@ -73,6 +73,9 @@ public interface CheckInDao {
             "VALUES (#{userId},#{checkInId},#{likeTime})")
     Integer insertUserLikeCheckIn(UserLikeCheckIn userLikeCheckIn);
 
+    @Delete("delete from user_like_check_in where check_in_id=#{checkIn}")
+    Integer deleteLikeCheckIn(Integer checkIn);
+
     //查询一个打卡的点赞数
     @Select("select count(*) from user_like_check_in where check_in_id=#{checkInId}")
     Integer getLikeCountByCheckIn(Integer checkInId);
