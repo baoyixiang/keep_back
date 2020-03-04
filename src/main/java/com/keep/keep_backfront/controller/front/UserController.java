@@ -67,6 +67,6 @@ public class UserController {
     //获取用户推荐列表（待完成）
     @ApiOperation("获取推荐用户列表")
     @GetMapping("recommend_user_list")
-    public List<User> getRecommendUser() {return userDao.getRecommendedUser();}
+    public List<User> getRecommendUser(Integer userId) {return userDao.getRecommendedUser(userId);}
 
 }
