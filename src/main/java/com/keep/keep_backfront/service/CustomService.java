@@ -169,8 +169,8 @@ public class CustomService {
         System.out.println("2:参加人数+1");
         try {
             if(!addedCustomList.contains(joinCustom.getCustomId())) {
-                customDao.updateCustomJoinCount(custom);
                 customDao.joinCustom(joinCustom);
+                customDao.updateCustomJoinCount(custom);
             }else {
                 return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
             }
